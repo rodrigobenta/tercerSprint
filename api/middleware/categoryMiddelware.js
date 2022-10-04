@@ -63,7 +63,7 @@ const existDeleteCategory = async (req,res,next) => {
                 req.id = id;
                 next();
             }else return res.status(404).json({ msg: 'La categoria no existe.'});
-        }else res.status(409).json({ msg: 'La categoria tiene asociada un producto no se puede borrar.'});
+        }else res.status(404).json({ msg: 'La categoria tiene asociada un producto no se puede borrar.'});
     } catch (error) {
         res.status(500).json({ msg: 'Server error.' });
     }

@@ -1,6 +1,5 @@
 const {app} = require("../app");
 const request = require("supertest");
-const db = require("../database/models");
 const generateJWT = require("../helpers/generateJWT");
 
 describe('GET /categories ', () => {
@@ -73,7 +72,7 @@ describe('GET /categories ', () => {
             })
         );
     });
-
+    
 });
 
 describe('GET /categories/:id', () => {
@@ -123,7 +122,7 @@ describe('GET /categories/:id', () => {
 
     test('Retorna un status 200 y devuelve la categoria indicada por el id (ROLE-ADMIN)', async () => {
         const id = 1; 
-        const token = await generateJWT({ role: 'god'});
+        const token = await generateJWT({ role: 'admin'});
         const { body, statusCode } = await request(app).get(`/api/v2/categories/${id}`).auth(token, { type: 'bearer'});
         expect(statusCode).toEqual(200);
         expect(body).toEqual(expect.objectContaining({
@@ -136,7 +135,7 @@ describe('GET /categories/:id', () => {
 
     test('Retorna un status 200 y devuelve la categoria indicada por el id (ROLE-GUEST)', async () => {
         const id = 1; 
-        const token = await generateJWT({ role: 'god'});
+        const token = await generateJWT({ role: 'guest'});
         const { body, statusCode } = await request(app).get(`/api/v2/categories/${id}`).auth(token, { type: 'bearer'});
         expect(statusCode).toEqual(200);
         expect(body).toEqual(expect.objectContaining({
@@ -150,7 +149,7 @@ describe('GET /categories/:id', () => {
 
 describe('POST /categories', () => {
 
-    test.skip('Retorna un status 401 y un mensaje que no tienes permisos (ROLE-GUEST)', async () => {
+    test('Retorna un status 401 y un mensaje que no tienes permisos (ROLE-GUEST)', async () => {
         const data = { "title": "muebles" };
         const token = await generateJWT({ role: 'guest'});
         const { body, statusCode } = await request(app).post(`/api/v2/categories`).auth(token, { type: 'bearer'}).send(data);
@@ -160,7 +159,7 @@ describe('POST /categories', () => {
         }));
     });
 
-    test.skip('Retorna un status 400 y un mensaje que ya hay una categoria con ese titulo (ROLE-GOD)', async () => {
+    test('Retorna un status 400 y un mensaje que ya hay una categoria con ese titulo (ROLE-GOD)', async () => {
         const data = { "title": "muebles" };
         const token = await generateJWT({ role: 'god'});
         const { body, statusCode } = await request(app).post(`/api/v2/categories`).auth(token, { type: 'bearer'}).send(data);
@@ -174,8 +173,36 @@ describe('POST /categories', () => {
         }));
     });
 
-    test.skip('Retorna un status 400 y un mensaje que ya hay una categoria con ese titulo (ROLE-ADMIN)', async () => {
+    test('Retorna un status 400 y un mensaje que ya hay una categoria con ese titulo (ROLE-ADMIN)', async () => {
         const data = { "title": "muebles" };
+        const token = await generateJWT({ role: 'admin'});
+        const { body, statusCode } = await request(app).post(`/api/v2/categories`).auth(token, { type: 'bearer'}).send(data);
+        expect(statusCode).toEqual(400);
+        expect(body).toEqual(expect.objectContaining({
+            errors: expect.arrayContaining([
+                expect.objectContaining({
+                    msg: expect.any(String)
+                })
+            ])
+        }));
+    });
+
+    test('Retorna un status 400 y un mensaje que el titulo no puede ir vacio (ROLE-GOD)', async () => {
+        const data = { };
+        const token = await generateJWT({ role: 'god'});
+        const { body, statusCode } = await request(app).post(`/api/v2/categories`).auth(token, { type: 'bearer'}).send(data);
+        expect(statusCode).toEqual(400);
+        expect(body).toEqual(expect.objectContaining({
+            errors: expect.arrayContaining([
+                expect.objectContaining({
+                    msg: expect.any(String)
+                })
+            ])
+        }));
+    });
+
+    test('Retorna un status 400 y un mensaje que el titulo no puede ir vacio (ROLE-ADMIN)', async () => {
+        const data = { };
         const token = await generateJWT({ role: 'admin'});
         const { body, statusCode } = await request(app).post(`/api/v2/categories`).auth(token, { type: 'bearer'}).send(data);
         expect(statusCode).toEqual(400);
@@ -202,7 +229,7 @@ describe('POST /categories', () => {
 
     test.skip('Retorna un status 201 y la categoria creada (ROLE-ADMIN)', async () => {
         const data = { "title": "pastas" };
-        const token = await generateJWT({ role: 'god'});
+        const token = await generateJWT({ role: 'admin'});
         const { body, statusCode } = await request(app).post(`/api/v2/categories`).auth(token, { type: 'bearer'}).send(data);
         expect(statusCode).toEqual(201);
         expect(body).toEqual(expect.objectContaining({
@@ -249,10 +276,40 @@ describe('PUT /categories/:id', () => {
         }));
     });
 
+    test('Retorna un status 400 y un mensaje que el titulo no puede ir vacio (ROLE-GOD)', async () => {
+        const id = 1;
+        const data = { };
+        const token = await generateJWT({ role: 'god'});
+        const { body, statusCode } = await request(app).put(`/api/v2/categories/${id}`).auth(token, { type: 'bearer'}).send(data);
+        expect(statusCode).toEqual(400);
+        expect(body).toEqual(expect.objectContaining({
+            errors: expect.arrayContaining([
+                expect.objectContaining({
+                    msg: expect.any(String)
+                })
+            ])
+        }));
+    });
+
+    test('Retorna un status 400 y un mensaje que el titulo no puede ir vacio (ROLE-ADMIN)', async () => {
+        const id = 1;
+        const data = { };
+        const token = await generateJWT({ role: 'admin'});
+        const { body, statusCode } = await request(app).put(`/api/v2/categories/${id}`).auth(token, { type: 'bearer'}).send(data);
+        expect(statusCode).toEqual(400);
+        expect(body).toEqual(expect.objectContaining({
+            errors: expect.arrayContaining([
+                expect.objectContaining({
+                    msg: expect.any(String)
+                })
+            ])
+        }));
+    });
+
     test.skip('Retorna un status 200 y la categoria editada (ROLE-GOD)', async () => {
         const id = 1;
         const data = { "title": "muebles" };
-        const token = await generateJWT({ role: 'admin'});
+        const token = await generateJWT({ role: 'god'});
         const { body, statusCode } = await request(app).put(`/api/v2/categories/${id}`).auth(token, { type: 'bearer'}).send(data);
         expect(statusCode).toEqual(200);
         expect(body).toEqual(expect.objectContaining({
@@ -282,7 +339,7 @@ describe('DELETE /categories/:id', () => {
         const id = 1;
         const data = { "title": "muebles" };
         const token = await generateJWT({ role: 'guest'});
-        const { body, statusCode } = await request(app).put(`/api/v2/categories/${id}`).auth(token, { type: 'bearer'}).send(data);
+        const { body, statusCode } = await request(app).delete(`/api/v2/categories/${id}`).auth(token, { type: 'bearer'}).send(data);
         expect(statusCode).toEqual(401);
         expect(body).toEqual(expect.objectContaining({
             msg: expect.any(String)
@@ -292,7 +349,7 @@ describe('DELETE /categories/:id', () => {
     test('Retorna un status 404 y un mensaje de que no existe la categoria indicada (ROLE-GOD)', async () => {
         const id = 10;
         const token = await generateJWT({ role: 'god'});
-        const { body, statusCode } = await request(app).put(`/api/v2/categories/${id}`).auth(token, { type: 'bearer'});
+        const { body, statusCode } = await request(app).delete(`/api/v2/categories/${id}`).auth(token, { type: 'bearer'});
         expect(statusCode).toEqual(404);
         expect(body).toEqual(expect.objectContaining({
             msg: expect.any(String)
@@ -302,28 +359,28 @@ describe('DELETE /categories/:id', () => {
     test('Retorna un status 404 y un mensaje de que no existe la categoria indicada (ROLE-ADMIN)', async () => {
         const id = 10;
         const token = await generateJWT({ role: 'admin'});
-        const { body, statusCode } = await request(app).put(`/api/v2/categories/${id}`).auth(token, { type: 'bearer'});
+        const { body, statusCode } = await request(app).delete(`/api/v2/categories/${id}`).auth(token, { type: 'bearer'});
         expect(statusCode).toEqual(404);
         expect(body).toEqual(expect.objectContaining({
             msg: expect.any(String)
         }));
     });
 
-    test('Retorna un status 409 y un mensaje de que no se puede eliminar porque tiene un producto asociado (ROLE-GOD)', async () => {
+    test('Retorna un status 404 y un mensaje de que no se puede eliminar porque tiene un producto asociado (ROLE-GOD)', async () => {
         const id = 1;
         const token = await generateJWT({ role: 'god'});
-        const { body, statusCode } = await request(app).put(`/api/v2/categories/${id}`).auth(token, { type: 'bearer'});
-        expect(statusCode).toEqual(409);
+        const { body, statusCode } = await request(app).delete(`/api/v2/categories/${id}`).auth(token, { type: 'bearer'});
+        expect(statusCode).toEqual(404);
         expect(body).toEqual(expect.objectContaining({
             msg: expect.any(String)
         }));
     });
 
-    test('Retorna un status 409 y un mensaje de que no se puede eliminar porque tiene un producto asociado (ROLE-ADMIN)', async () => {
+    test('Retorna un status 404 y un mensaje de que no se puede eliminar porque tiene un producto asociado (ROLE-ADMIN)', async () => {
         const id = 1;
         const token = await generateJWT({ role: 'admin'});
-        const { body, statusCode } = await request(app).put(`/api/v2/categories/${id}`).auth(token, { type: 'bearer'});
-        expect(statusCode).toEqual(409);
+        const { body, statusCode } = await request(app).delete(`/api/v2/categories/${id}`).auth(token, { type: 'bearer'});
+        expect(statusCode).toEqual(404);
         expect(body).toEqual(expect.objectContaining({
             msg: expect.any(String)
         }));
@@ -331,8 +388,8 @@ describe('DELETE /categories/:id', () => {
 
     test.skip('Retorna un status 200 y la categoria eliminada (ROLE-GOD)', async () => {
         const id = 1;
-        const token = await generateJWT({ role: 'admin'});
-        const { body, statusCode } = await request(app).put(`/api/v2/categories/${id}`).auth(token, { type: 'bearer'});
+        const token = await generateJWT({ role: 'god'});
+        const { body, statusCode } = await request(app).delete(`/api/v2/categories/${id}`).auth(token, { type: 'bearer'});
         expect(statusCode).toEqual(200);
         expect(body).toEqual(expect.objectContaining({
             CategoryDeleted: expect.objectContaining({
@@ -344,7 +401,7 @@ describe('DELETE /categories/:id', () => {
     test.skip('Retorna un status 200 y la categoria eliminada (ROLE-ADMIN)', async () => {
         const id = 4;
         const token = await generateJWT({ role: 'admin'});
-        const { body, statusCode } = await request(app).put(`/api/v2/categories/${id}`).auth(token, { type: 'bearer'});
+        const { body, statusCode } = await request(app).delete(`/api/v2/categories/${id}`).auth(token, { type: 'bearer'});
         expect(statusCode).toEqual(200);
         expect(body).toEqual(expect.objectContaining({
             CategoryDeleted: expect.objectContaining({

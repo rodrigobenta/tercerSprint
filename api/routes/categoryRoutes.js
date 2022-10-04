@@ -10,7 +10,7 @@ const router = express.Router();
 router.get('/', verifyJWT, existListCategory, listCategory);
 router.get('/:id' , verifyJWT, existListCategory, listCategoryID);
 router.post('/',verifyJWT, verifyRoleEditPicture , verifyCreateCategory, createCategory);
-router.put('/:id',verifyJWT, verifyRoleEditPicture ,existEditCategory,  editCategory);
+router.put('/:id',verifyJWT, verifyRoleEditPicture ,existEditCategory, verifyCreateCategory, editCategory);
 router.delete('/:id',verifyJWT, verifyRoleEditPicture , existDeleteCategory,  deleteCategoryById);
 
 
