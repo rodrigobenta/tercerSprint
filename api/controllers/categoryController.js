@@ -12,7 +12,7 @@ const listCategory = async (req, res) => {
 const listCategoryID =(req, res) => {
     try {
         const category = req.category;
-        return res.status(404).json({ Category: category });
+        return res.status(200).json({ Category: category });
     } catch (error) {
         res.status(500).json({ msg: 'Server error.' });
     }
@@ -23,6 +23,18 @@ const createCategory = async (req, res) => {
         const body = req.body;
         const newCategory = await db.Category.create(body);
         res.status(201).json({ newCategory });
+    } catch (error) {
+        res.status(500).json({ msg: 'Server error.' });
+    }
+}
+
+const editCategory = async (req, res) => {
+    try {
+        const body = req.body;
+        const id = req.id;
+        await db.Category.update({ ...body }, { where: { id_category: Number(id) } });
+        const categoryEdit = await db.Category.findByPk(id, { attributes: { exclude: ['id_category'] }})
+        res.status(200).json({ CategoryEdited: categoryEdit });
     } catch (error) {
         res.status(500).json({ msg: 'Server error.' });
     }
@@ -41,22 +53,11 @@ const deleteCategoryById = async (req,res) => {
     }
 }
 
-const editCategory = async (req, res) => {
-    try {
-        const body = req.body;
-        const id = req.id;
-        await db.Category.update({ ...body }, { where: { id_category: Number(id) } });
-        const categoryEdit = await db.Category.findByPk(id, { attributes: { exclude: ['id_category'] }})
-        res.status(200).json({ CategoryEdited: categoryEdit });
-    } catch (error) {
-        res.status(500).json({ msg: 'Server error.' });
-    }
-}
 
 module.exports = {
     listCategory,
     listCategoryID,
     createCategory,
-    deleteCategoryById,
-    editCategory
+    editCategory,
+    deleteCategoryById
 };

@@ -25,7 +25,7 @@ const existListCategory = async ( req,res,next) => {
             if (categorys[0] != null) {
                 req.category = categorys;
                 next();
-            } else res.status(404).json({ msg: 'No existe esa categoria.' });
+            } else res.status(404).json({ msg: 'No categorias en el sistema.' });
         }
     }catch(error){
         res.status(500).json({ msg: 'Server error.' })
@@ -63,7 +63,7 @@ const existDeleteCategory = async (req,res,next) => {
                 req.id = id;
                 next();
             }else return res.status(404).json({ msg: 'La categoria no existe.'});
-        }else res.status(404).json({ msg: 'La categoria tiene asociada un producto no se puede borrar.'});
+        }else res.status(409).json({ msg: 'La categoria tiene asociada un producto no se puede borrar.'});
     } catch (error) {
         res.status(500).json({ msg: 'Server error.' });
     }
