@@ -14,12 +14,12 @@ const listPictures = async(req, res) => {
             (pictures.length > 0) ? res.status(200).json({pictures}) : res.status(404).json({msg: 'No existe el producto indicado o no hay fotos'});
             }
     } catch (error) {
-        res.status(500).json({msg: 'Server error'});
+        res.status(500).json({msg: 'Internal Server error de list pictures'});
     }
 }
 const listPictureById = async(req, res) => {
-    const id = req.params.id;
     try {
+        const id = req.params.id;
         const picture = await db.Picture.findByPk(id);
         (picture) ? res.status(200).json({picture}) : res.status(404).json({msg: 'No existe la foto indicada'});
     } catch (error) {
@@ -28,18 +28,9 @@ const listPictureById = async(req, res) => {
 };
 
 const createPicture = async(req, res) => {
-    try {
-        const body = req.body;
-        const newPicture = await db.Picture.create(body)
-        res.status(201).json({ picture: newPicture });
-    } catch (error) {
-        const errObj = {};
-            error.errors.map( er => {
-            errObj[er.path] = er.message;
-            })
-        if(errObj) res.status(500).json(errObj);
-        else res.status(500).json({ msg: 'Server error.' });
-    }
+    const body = req.body;
+    const newPicture = await db.Picture.create(body)
+    res.status(201).json({ picture: newPicture });
 }
 
 const editPicture = async(req, res) => {
@@ -54,25 +45,15 @@ const editPicture = async(req, res) => {
         }
         else res.status(404).json({msg: "La foto no existe"});
     } catch (error) {
-        const errObj = {};
-            error.errors.map( er => {
-            errObj[er.path] = er.message;
-            })
-        if(errObj) res.status(500).json(errObj);
-        else res.status(500).json({ msg: 'Server error.' });
+        res.status(500).json({ msg: 'Server error.' });
     }
 };
 
 const deletePicture = async(req, res) => {
-    try {
-        const id = req.params.id;
-        const pictureDeleted = req.picture;
-        await db.Picture.destroy({where: {id_picture: id}})
-        res.status(200).json({PictureDeleted: pictureDeleted})
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({mensaje: 'Server error'});
-    }
+    const id = Number(req.params.id);
+    const pictureDeleted = req.picture;
+    await db.Picture.destroy({where: {id_picture: id}});
+    res.status(200).json({PictureDeleted: pictureDeleted});
 };
 
 module.exports = {

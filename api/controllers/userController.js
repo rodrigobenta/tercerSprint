@@ -15,7 +15,7 @@ const login = async (req,res) => {
             const password_valid = await bcrypt.compare(req.body.password,userLogged.password);
             if(password_valid){
                 const {password, ...userLogin} = userLogged;
-                token = await jwt(userLogin);
+                let token = await jwt(userLogin);
                 res.status(200).json({
                     success: true,
                     message: 'Authorized',

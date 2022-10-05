@@ -52,8 +52,8 @@ app.delete('/*', (req,res)=>{
 
 
 if(process.env.NODE_ENV !== 'test'){
-    app.listen(3000, () => {
-        console.log("corriendo en el puerto 3000");
+    app.listen(3001, () => {
+        console.log("corriendo en el puerto 3001");
             sequelize.sync({/* force: true */})
         })
 }
