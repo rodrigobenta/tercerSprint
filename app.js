@@ -49,13 +49,12 @@ app.delete('/*', (req,res)=>{
     res.status(400).json({ Mensaje: 'Bad Request.'})
 })
 
-
-
 if(process.env.NODE_ENV !== 'test'){
-    app.listen(8080, () => {
-        console.log("corriendo en el puerto 8080");
-            sequelize.sync({ /*force: true*/ })
+    app.listen(3000, () => {
+        console.log("corriendo en el puerto 3000");
+            sequelize.sync({/* force: true */});
         })
 }
 
-module.exports ={app}
+module.exports = { app };
+

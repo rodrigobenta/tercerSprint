@@ -1,22 +1,20 @@
 module.exports = {
   "development": {
     "username": "root",
-    "password": "M95952308l",
-    "database": "ecomerce",
+    "password": "cenco",
+    "database": "ecommerce",
     "host": "127.0.0.1",
     "dialect": "mysql",
-    "port" : "3306",
-    "logging" : false
+    "logging": false
   },
   "test": {
     "username": "root",
-    "password": "M95952308l",
-    "database": "ecomerce",
+    "password": "cenco",
+    "database": "ecommerce_test",
     "host": "127.0.0.1",
     "dialect": "mysql",
-    "port" : "3306",
-    "logging" : false
-   
+    "logging": false
+
   },
   "production": {
     "username": "root",
