@@ -1791,6 +1791,15 @@ paths:
                   Mensaje: 
                     type: string
         
+        '409':
+          description:  No se puede eliminar ya que hay un producto asociado
+          content:
+            application/json:
+              schema:
+                properties:
+                  Mensaje: 
+                    type: string
+        
         '500':
           description: Server error
           content:

@@ -33,10 +33,21 @@ describe("Ciclo de testing automatizado", () => {
         }));
     });
 
-    test.skip('POST Retorna un status 201 y la categoria creada (ROLE-GOD)', async () => {
-        const data = { "title": "jardineria" };
+    test('POST Retorna un status 201 y la categoria creada (ROLE-GOD)', async () => {
+        const data2 = { "title": "jardineria" };
         const token = await generateJWT({ role: 'god'});
-        const { body, statusCode } = await request(app).post(`/api/v2/categories`).auth(token, { type: 'bearer'}).send(data);
+        const { body, statusCode } = await request(app).post(`/api/v2/categories`).auth(token, { type: 'bearer'}).send(data2);
+        const category = await db.Category.findOne();
+        const idCategory = category.dataValues.id_category;
+        const data = { 
+            "title": "mesa",
+            "stock": 3, 
+            "description": "mesa familiar", 
+            "price": 1236, 
+            "fk_id_category": `${idCategory}`, 
+            "mostwanted": 1 
+            }
+        await request(app).post('/api/v2/products').auth(token, { type: 'bearer'}).send(data) // creo un producto 
         expect(statusCode).toEqual(201);
         expect(body).toEqual(expect.objectContaining({
             newCategory: expect.objectContaining({
@@ -178,8 +189,7 @@ describe("Ciclo de testing automatizado", () => {
 
     test('PUT Retorna un status 200 y la categoria editada (ROLE-GOD)', async () => {
         const primer = await db.Category.findOne();
-        const id = primer.dataValues.id_category ;
-        // comente porque es el skip de la categoria con el producto const id = primer.dataValues.id_category + 1;
+        const id = primer.dataValues.id_category + 1;
         const data = { "title": "autos" };
         const token = await generateJWT({ role: 'god'});
         const { body, statusCode } = await request(app).put(`/api/v2/categories/${id}`).auth(token, { type: 'bearer'}).send(data);
@@ -193,8 +203,7 @@ describe("Ciclo de testing automatizado", () => {
 
     test('PUT Retorna un status 200 y la categoria editada (ROLE-ADMIN)', async () => {
         const primer = await db.Category.findOne();
-        const id = primer.dataValues.id_category + 1;
-        // comente porque es el skip de la categoria con el producto const id = primer.dataValues.id_category + 2;
+        const id = primer.dataValues.id_category + 2;
         const data = { "title": "golosinas" };
         const token = await generateJWT({ role: 'admin'});
         const { body, statusCode } = await request(app).put(`/api/v2/categories/${id}`).auth(token, { type: 'bearer'}).send(data);
@@ -375,30 +384,47 @@ describe("Ciclo de testing automatizado", () => {
         }));
     });
 
-    test.skip('DELETE Retorna un status 404 y un mensaje de que no se puede eliminar porque tiene un producto asociado (ROLE-GOD)', async () => {
-        const id = 1;
+    test('DELETE Retorna un status 409 y un mensaje de que no se puede eliminar porque tiene un producto asociado (ROLE-GOD)', async () => {
+        const primer = await db.Category.findOne();
+        const id = primer.dataValues.id_category;
         const token = await generateJWT({ role: 'god'});
         const { body, statusCode } = await request(app).delete(`/api/v2/categories/${id}`).auth(token, { type: 'bearer'});
-        expect(statusCode).toEqual(404);
+        expect(statusCode).toEqual(409);
         expect(body).toEqual(expect.objectContaining({
             msg: expect.any(String)
         }));
     });
 
-    test.skip('DELETE Retorna un status 404 y un mensaje de que no se puede eliminar porque tiene un producto asociado (ROLE-ADMIN)', async () => {
-        const id = 1;
+    test('DELETE Retorna un status 409 y un mensaje de que no se puede eliminar porque tiene un producto asociado (ROLE-ADMIN)', async () => {
+        const primer = await db.Category.findOne();
+        const id = primer.dataValues.id_category;
         const token = await generateJWT({ role: 'admin'});
         const { body, statusCode } = await request(app).delete(`/api/v2/categories/${id}`).auth(token, { type: 'bearer'});
-        expect(statusCode).toEqual(404);
+        expect(statusCode).toEqual(409);
         expect(body).toEqual(expect.objectContaining({
             msg: expect.any(String)
         }));
     });
 
-    test('DELETE Retorna un status 200 y la categoria eliminada (ROLE-GOD)', async () => {
+    test.skip('DELETE Retorna un status 200 y la categoria eliminada (ROLE-GOD)', async () => {
+        const product = await db.Product.findOne();
+        const idProduct = product.dataValues.id_product;
         const primer = await db.Category.findOne();
-        const id = primer.dataValues.id_category ;
-        //comente porque es el skip de la categoria con el producto const id = primer.dataValues.id_category + 1;
+        const id = primer.dataValues.id_category;
+        const token = await generateJWT({ role: 'god'});
+        await request(app).delete(`/api/v2/products/${idProduct}`).auth(token, { type: 'bearer'});
+        const { body, statusCode } = await request(app).delete(`/api/v2/categories/${id}`).auth(token, { type: 'bearer'});
+        expect(statusCode).toEqual(200);
+        expect(body).toEqual(expect.objectContaining({
+            CategoryDeleted: expect.objectContaining({
+                title: expect.any(String)
+            })
+        }));
+    });
+
+    test.skip('DELETE Retorna un status 200 y la categoria eliminada (ROLE-GOD)', async () => {
+        const primer = await db.Category.findOne();
+        const id = primer.dataValues.id_category;
         const token = await generateJWT({ role: 'god'});
         const { body, statusCode } = await request(app).delete(`/api/v2/categories/${id}`).auth(token, { type: 'bearer'});
         expect(statusCode).toEqual(200);
@@ -409,10 +435,9 @@ describe("Ciclo de testing automatizado", () => {
         }));
     });
 
-    test('DELETE Retorna un status 200 y la categoria eliminada (ROLE-ADMIN)', async () => {
+    test.skip('DELETE Retorna un status 200 y la categoria eliminada (ROLE-ADMIN)', async () => {
         const primer = await db.Category.findOne();
         const id = primer.dataValues.id_category;
-        //comente porque es el skip de la categoria con el producto const id = primer.dataValues.id_category + 1;
         const token = await generateJWT({ role: 'admin'});
         const { body, statusCode } = await request(app).delete(`/api/v2/categories/${id}`).auth(token, { type: 'bearer'});
         expect(statusCode).toEqual(200);
@@ -610,5 +635,5 @@ describe("Ciclo de testing automatizado", () => {
         }); 
 
     });
-
+ 
 }); 
