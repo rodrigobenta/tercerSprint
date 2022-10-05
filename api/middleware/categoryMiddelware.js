@@ -25,10 +25,10 @@ const existListCategory = async ( req,res,next) => {
             if (categorys[0] != null) {
                 req.category = categorys;
                 next();
-            } else res.status(404).json({ msg: 'No categorias en el sistema.' });
+            } else res.status(404).json({ msg: 'No hay categorias en el sistema.' });
         }
     }catch(error){
-        res.status(500).json({ msg: 'Server error.' })
+        res.status(500).json({ msg: 'Server error.' });
     }
 }
 
@@ -44,7 +44,7 @@ const existEditCategory = async (req,res,next) => {
         }
         else res.status(404).json({ msg: 'No existe la cateogira.' })
     }catch(error){
-        res.status(500).json({ msg: 'Server error.' })
+        res.status(500).json({ msg: 'Server error.' });
     }
 }
 

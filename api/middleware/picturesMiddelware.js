@@ -39,8 +39,6 @@ const existPictureVerify = async(req,res,next) => {
 const verifyRoleEditPicture = (req,res,next) => {
     try {
         let role = req.role;
-        console.log(role
-            );
         if(role == 'guest') res.status(401).json({msg: 'No tiene permisos sobre las fotos'});
         else next();
     } catch (error) {

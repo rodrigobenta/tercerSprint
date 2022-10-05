@@ -21,7 +21,8 @@ const listCategoryID =(req, res) => {
 const createCategory = async (req, res) => {
     try {
         const body = req.body;
-        const newCategory = await db.Category.create(body);
+        await db.Category.create(body);
+        const newCategory = db.Category.findOne({where: {title: body.title}});
         res.status(201).json({ newCategory });
     } catch (error) {
         res.status(500).json({ msg: 'Server error.' });
