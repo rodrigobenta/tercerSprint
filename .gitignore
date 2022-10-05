@@ -3,3 +3,5 @@
 /config.js
 /app.js
 /.sequelizerc
+/coverage
+/.env
