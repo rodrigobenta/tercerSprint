@@ -7,9 +7,11 @@ const { pasarATrueOrFalseArray, pasarATrueOrFalse } = require("../../helpers/pas
 const listProduct = async (req, res) => {
     try {
         const products = req.products;
+
         pasarATrueOrFalseArray(products)
         return res.status(200).json({ Productos: products });
     } catch (error) {
+  
         res.status(500).json({ mensaje: 'Server error' });
     }
 }
@@ -32,6 +34,7 @@ const listProductByID = async (req, res) => {
 const listProductByKeyword = async (req, res) => {
     try {
         const list = req.list;
+        
         pasarATrueOrFalseArray(list);
         res.status(200).json({ Lista: list });
     } catch (error) {
@@ -78,6 +81,7 @@ const createProduct = async (req, res) => {
 const editProduct = async (req, res) => {
     try {
         const idProduct = req.id;
+    
         const body = req.body;
         const fk_id_category = req.category;
         await db.Product.update({ ...body, fk_id_category },{ where: { id_product: Number(idProduct) } });

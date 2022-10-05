@@ -33,6 +33,7 @@ const verifyEdit = [
 const existProductListVerify = async (req,res,next) => {
     let products = null;
     const {category} = req.query;
+  
     if(category){
         products = await db.Product.findAll({
             include: [
@@ -53,24 +54,32 @@ const existProductListVerify = async (req,res,next) => {
     if (products[0] != null) {
         req.products = products;
         next();
-    } else res.status(404).json({ msg: 'No existen productos.' });
+    } else res.status(404).json({ msg: 'No existen productos o categoria especificada.' });
 }
 
 const existProductListByIdVerify = async (req,res,next) => {
-    const product = await db.Product.findByPk(req.params.id, {
-        include: [
-            { association: 'pictures', attributes: { exclude: ['id_picture', 'fk_id_product'] }, require: false },
-            { association: 'category', attributes: { exclude: ['id_category'] }, require: false }
-        ], attributes: { exclude: ['fk_id_category'] }
-    });
-    if (product) {
-        req.product = product;
-        next();
-    } else res.status(404).json({ msg: 'No existe el producto.' });
+
+    try {
+        const product = await db.Product.findByPk(req.params.id, {
+            include: [
+                { association: 'pictures', attributes: { exclude: ['id_picture', 'fk_id_product'] }, require: false },
+                { association: 'category', attributes: { exclude: ['id_category'] }, require: false }
+            ], attributes: { exclude: ['fk_id_category'] }
+        });
+        if (product) {
+            req.product = product;
+            next();
+        } else res.status(404).json({ msg: 'No existe el producto.' });
+    } catch (error) {
+        console.log(error)
+    }
+  
 }
 
 const existProductListKeywordVerify = async (req,res,next) => {
     const key = req.query.q;
+    console.log(key)
+    const list2 =await db.Product.findAll();
     const list = await db.Product.findAll( { 
         where: { [Op.or]: [{ description: { [Op.like]: `${key}` } }, { title: { [Op.like]: `${key}` } }] } ,
             include: [
@@ -79,6 +88,7 @@ const existProductListKeywordVerify = async (req,res,next) => {
         ], 
         attributes:{exclude: ['fk_id_category']}
     });
+    console.log(list2);
     if (list[0] != null) {
         req.list = list;
         next(); 
@@ -103,6 +113,7 @@ const existProductListMostwantedVerify = async (req,res,next) => {
 const existProductEditVerify = async (req,res,next) => {
     const { fk_id_category, ...body } = req.body;
     const { idProduct } = req.params;
+    console.log(idProduct);
     let category = null;
     const product = await db.Product.findByPk(Number(idProduct));
     if (!fk_id_category)  category = product.fk_id_category;
@@ -117,19 +128,23 @@ const existProductEditVerify = async (req,res,next) => {
 }
 
 const existProductDeleteVerify = async (req,res,next) => {
+
     const id = Number(req.params.id);
+
     const oldData = await db.Product.findByPk(id, {raw: true});
-    const cartInProduct = await db.Cart.findOne({ where: {fk_id_product: Number(oldData.id_product) }});
+
     if (oldData) {
-        if (!cartInProduct) {
+        const cartInProduct = await db.Cart.findOne({ where: {fk_id_product: Number(oldData.id_product) }});
+         if (!cartInProduct) {
             const pictureProductDelete = await db.Picture.findOne({ where: { fk_id_product: Number(oldData.id_product) } });
             if (!pictureProductDelete) {
                 req.id = id;
                 req.oldData = oldData;
                 next();
-            } else res.status(404).json({ msg: 'Ese producto tiene una picture asociada y por ende no se puede borrar' })
-        } else res.status(404).json({ msg: 'Ese producto tiene un carro asociado y por ende no se puede borrar' })
+            } else res.status(409).json({ msg: 'Ese producto tiene una picture asociada y por ende no se puede borrar' })
+        } else res.status(409).json({ msg: 'Ese producto tiene un carro asociado y por ende no se puede borrar' })
     } else res.status(404).json({ msg: 'Ese producto no existe.' })
+
 }
 
 const verifyRoleCreateDelete = (req,res,next) => {

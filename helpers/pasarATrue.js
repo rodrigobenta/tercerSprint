@@ -1,5 +1,5 @@
 const pasarATrueOrFalseArray = (arr) => {
-    arr.forEach(el => el.mostwanted === 1 ? el.mostwanted = true : el.mostwanted = false);
+ arr.forEach(el => el.mostwanted === 1 ? el.mostwanted = true : el.mostwanted = false);
 }
 
 const pasarATrueOrFalse = (elem) => {

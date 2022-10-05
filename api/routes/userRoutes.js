@@ -7,7 +7,7 @@ const { cartOfId, updateCart } = require('../controllers/cartsControllers');
 
 
 
-router.get('/', verifyJWT, verifyRoleList, listUsers); 
+router.get('/', /*verifyJWT*/ verifyRoleList, listUsers); 
 router.get('/:id', verifyJWT, verifyRoleList, userExists, listUserById);
 router.post('/', createUserVerify, createUser);
 router.put('/:id', verifyJWT, verifyRoleEdit, userExists, editUserVerify, editUserById);
