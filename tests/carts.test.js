@@ -2,10 +2,62 @@ const request = require('supertest');
 const {app} = require("../app");
 const db = require('../database/models');
 const generateJWT = require('../helpers/generateJWT');
+const { sequelize } = require('../database/models')
+const bcrypt = require("bcrypt");
 
 
+//Preparar base de pruebas
+
+test("Levanto el servidor ", async () => {
+        
+        await sequelize.sync({ force: true });
+
+        const token = await generateJWT({role:'god'});
+
+    
+        let password = "123456";
+        const salt = await bcrypt.genSalt(10); 
+        password = await bcrypt.hash(password, salt);
+        const userGod = {email: "god@gmail.com", username: "god", password: password, firstname: "god", lastname: "GOD", profilepic: "micara", role: "god"};
+        const userAdmin = {email: "admin@gmail.com", username: "admin", password: password, firstname: "admin", lastname: "ADMIN", profilepic: "paisaje", role: "admin"};
+        const userGuest = {email: "guest@gmail.com", username: "guest", password: password, firstname: "guest", lastname: "GUEST", profilepic: "insulto", role: "guest"};
+        await db.User.bulkCreate([userGod, userAdmin, userGuest]);
+
+        const data2 = { "title": "Todo lo que venga"};
+        await request(app).post('/api/v2/categories').auth(token, { type: 'bearer' }).send(data2);
+        //const category = await db.Category.findOne({where: {title: "Jardineria"}});
+        //const id = category.dataValues.id_category;
+
+        const producto1 = {"title": "Iphone 13", "stock": 50, "description": "quien se compraesto?", "price": 70000, "fk_id_category": 1, "mostwanted": 1};
+        const producto2 = {"title": "audi A3", "stock": 15, "description": "nunca taxi noseque", "price": 500100, "fk_id_category": 1, "mostwanted": 1};
+        const producto3 = {"title": "panDuro", "stock": 1000, "description": "esta duricimo", "price": 15, "fk_id_category": 1, "mostwanted": 0};
+        const producto4 = {"title": "mesa", "stock": 0, "description": "calidad precio", "price": 1101, "fk_id_category": 1, "mostwanted": 0};
+        const producto5 = {"title": "reloj", "stock": 0, "description": "cucu el del pajaro", "price": 10101, "fk_id_category": 1, "mostwanted": 0};
+        const producto6 = {"title": "chocolate", "stock": 50, "description": "calidad precio", "price": 10101, "fk_id_category": 1, "mostwanted": 1};
+        
+        await db.Product.bulkCreate([producto1, producto2, producto3, producto4, producto5, producto6]);
+
+        const data=[{"fk_id_product": 1, "quantity": 2}];
+        const { body, statusCode } = await request(app).put(`/api/v2/carts/2`).auth(token,{type: 'bearer'}).send(data);
+    
+    
+
+        const categoriaProducto = await db.Product.findOne({where: {title: "chocolate"}});
+
+        const idC = categoriaProducto.dataValues.fk_id_category;
+    
+        //console.log(body);
+        expect(1).toEqual(idC);
+        
+       //expect(body).toMatchObject({ token: expect.any(String) });
+    });
+
+
+
+
+//Enpiezan los test     
 describe("GET /api/v2/carts/id  <<Correctos>>", () => {
-    test("200, cartOfID, Debe devolver un carrito vacio", async () => {
+    test("200,role: GOD// cartOfID, Debe devolver un carrito vacio ", async () => {
         
         const token = await generateJWT({role:'god'});
 
@@ -16,13 +68,12 @@ describe("GET /api/v2/carts/id  <<Correctos>>", () => {
 
     });
 
-    test("200, cartOfID  devuelv el carrito de ID con productos", async ()=>{
+    test("200,role: GOD// cartOfID  devuelve el carrito de ID con productos ", async ()=>{
 
         const token = await generateJWT({role:'god'});
 
         const { body, statusCode } = await request(app).get('/api/v2/carts/2').auth(token,{type: 'bearer'});
         
-        console.log(body);
         expect(statusCode).toEqual(200);
         expect(body.msg).toEqual("Total $ 140000");
 
@@ -34,7 +85,7 @@ describe("GET /api/v2/carts/id  <<Correctos>>", () => {
 });
 
 describe("GET /api/v2/carts/id  <<Incorrecot>>", () => {
-    test("404, cartOfId, No encuentra al usuario por lo que retorna", async () => {
+    test("404,role: GOD// cartOfId, No encuentra al usuario por lo que retorna ", async () => {
         const token = await generateJWT({role:'god'});
     
         const { body, statusCode } = await request(app).get('/api/v2/carts/75').auth(token,{type: 'bearer'});;
@@ -46,7 +97,7 @@ describe("GET /api/v2/carts/id  <<Incorrecot>>", () => {
     });
 
 
-    test("401, cartOfId, No tenes permiso de ver ese carro", async () => {
+    test("401,role: guest// cartOfId, No tenes permiso de ver ese carro ", async () => {
         const token = await generateJWT({role:'guest', id_user: 3});
 
     
@@ -65,7 +116,7 @@ describe("GET /api/v2/carts/id  <<Incorrecot>>", () => {
 
 describe("PUT /api/v2/carts/id  <<Correctos>>", () => {
     
-    test("200, Update VACIO a un usuario existente SIN carro", async () => {
+    test("200,role: GOD// Update VACIO a un usuario existente SIN carro ", async () => {
         const token = await generateJWT({role:'god'});
         
         const data={};
@@ -78,7 +129,7 @@ describe("PUT /api/v2/carts/id  <<Correctos>>", () => {
 
     });
 
-    test("200, Update a un carrito, se actualiza con 1 producto existente", async () => {
+    test("200,role: GOD// Update a un carrito, se actualiza con 1 producto existente ", async () => {
         const token = await generateJWT({role:'god'});
         
         const data=[{
@@ -87,15 +138,14 @@ describe("PUT /api/v2/carts/id  <<Correctos>>", () => {
         }];
         
         const { body, statusCode } = await request(app).put(`/api/v2/carts/1`).auth(token,{type: 'bearer'}).send(data);
-        console.log("sadmmasmdkasdmlkjds");
         
-        console.log(body);
+
         expect(statusCode).toEqual(200);
         //expect(body.msg).toEqual('Total $ 140000.00');
 
     });
 
-    test("200, Update Vacio, a usuario CON carro", async () => {
+    test("200,role: GOD// Update Vacio, a usuario CON carro ", async () => {
         const token = await generateJWT({role:'god'});
         
         const data={};
@@ -108,7 +158,7 @@ describe("PUT /api/v2/carts/id  <<Correctos>>", () => {
 
     });
 
-    test("200, Update a un carrito con un producto con stok LIMITADO", async () => {
+    test("200,role: GOD// Update a un carrito con un producto con stok LIMITADO ", async () => {
         const token = await generateJWT({role:'god'});
         
         const data=[{
@@ -125,7 +175,7 @@ describe("PUT /api/v2/carts/id  <<Correctos>>", () => {
 
     });
 
-    test("200, Update Vacio, a usuario CON carro", async () => {
+    test("200,role: GOD// Update Vacio, a usuario CON carro ", async () => {
         const token = await generateJWT({role:'god'});
         
         const data={};
@@ -138,7 +188,7 @@ describe("PUT /api/v2/carts/id  <<Correctos>>", () => {
 
     });
 
-    test("200, Update a un carrito con un producto con SIN stok(0)", async () => {
+    test("200,role: GOD// Update a un carrito con un producto con SIN stok(0)", async () => {
         const token = await generateJWT({role:'god'});
         
         const data=[{
@@ -153,7 +203,7 @@ describe("PUT /api/v2/carts/id  <<Correctos>>", () => {
 
     });
 
-    test("200, Update a un carrito con mas de un producto", async () => {
+    test("200,role: GOD// Update a un carrito con mas de un producto ", async () => {
         const token = await generateJWT({role:'god'});
         
         const data=[{
@@ -165,15 +215,14 @@ describe("PUT /api/v2/carts/id  <<Correctos>>", () => {
         ];
         
         const { body, statusCode } = await request(app).put(`/api/v2/carts/1`).auth(token,{type: 'bearer'}).send(data);
-        console.log("sadmmasmdkasdmlkjds");
         
-        console.log(body);
+        
         expect(statusCode).toEqual(200);
         expect(body.productos.length).toBeGreaterThan(1);
 
     });
     
-    test("200, Update Vacio, a usuario CON carro", async () => {
+    test("200,role: GOD// Update Vacio, a usuario CON carro ", async () => {
         const token = await generateJWT({role:'god'});
         
         const data={};
@@ -186,7 +235,7 @@ describe("PUT /api/v2/carts/id  <<Correctos>>", () => {
 
     });
 
-    test("200, Update a un carrito con productos con DISTINTOS stocks", async () => {
+    test("200,role: GOD// Update a un carrito con productos con DISTINTOS stocks ", async () => {
         const token = await generateJWT({role:'god'});
         
         const data=[{
@@ -194,10 +243,10 @@ describe("PUT /api/v2/carts/id  <<Correctos>>", () => {
                 "quantity": 5 },
                 {
                 "fk_id_product": 2,
-                "quantity": 15 },
+                "quantity": 35 },
                 {
                 "fk_id_product": 3,
-                "quantity": 17 },
+                "quantity": 170 },
                 {
                 "fk_id_product": 4,
                 "quantity": 25 },
@@ -210,9 +259,7 @@ describe("PUT /api/v2/carts/id  <<Correctos>>", () => {
         ];
         
         const { body, statusCode } = await request(app).put(`/api/v2/carts/1`).auth(token,{type: 'bearer'}).send(data);
-        console.log("sadmmasmdkasdmlkjds");
-        
-        console.log(body);
+
         expect(statusCode).toEqual(200);
         expect(body.productos.length).toBeGreaterThan(1);
         expect(body.productos2.length).toBeGreaterThan(1);
@@ -220,7 +267,7 @@ describe("PUT /api/v2/carts/id  <<Correctos>>", () => {
 
     });
     
-    test("200, Update Vacio, a usuario CON carro", async () => {
+    test("200,role: GOD// Update Vacio, a usuario CON carro ", async () => {
         const token = await generateJWT({role:'god'});
         
         const data={};
@@ -233,14 +280,14 @@ describe("PUT /api/v2/carts/id  <<Correctos>>", () => {
 
     });
 
-    test("200, Update and Get of guest diaa wat,que decia", async () => {/////cuidado
+    test("200,role: guest// Update and Get of guest diaa wat,que decia /role: guest", async () => {/////cuidado
         const token = await generateJWT({role:'guest', id_user: 3});
         ///las dos juntas                      guest
         
         const data=[
             {
                 "fk_id_product": 2,
-                "quantity": 15 },
+                "quantity": 25 },
                 {
                 "fk_id_product": 3,
                 "quantity": 17 },
@@ -258,8 +305,8 @@ describe("PUT /api/v2/carts/id  <<Correctos>>", () => {
 
 
     });
-    test("200, Update Vacio, a usuario CON carro", async () => {
-        const token = await generateJWT({role:'god'});
+    test("200,role: GOD// Update Vacio, a usuario CON carro /role: guest", async () => {
+        const token = await generateJWT({role:'guest', id_user: 3});
         
         const data={};
         
@@ -274,11 +321,10 @@ describe("PUT /api/v2/carts/id  <<Correctos>>", () => {
 });
 
 
-
 describe("PUT /api/v2/carts/id  <<Incorrecto>>", () => {
 
 
-    test("404, Update a un usuario que no existe", async () => {
+    test("404,role: GOD// Update a un usuario que no existe", async () => {
         const token = await generateJWT({role:'god'});
         
         const data={};
@@ -290,7 +336,7 @@ describe("PUT /api/v2/carts/id  <<Incorrecto>>", () => {
 
 
     });
-    test("401, Update, No tenes permiso de modificar este carro", async () => {
+    test("401,role: guest// Update, No tenes permiso de modificar este carro", async () => {
         const token = await generateJWT({role:'guest', id_user: 3});
 
     
@@ -307,6 +353,59 @@ describe("PUT /api/v2/carts/id  <<Incorrecto>>", () => {
 });
 
 
+describe("Errores en endpoints", () => {
+    
+    test("400, GET bad request en el enpoint", async ()=>{
+        const token = await generateJWT({role:'god'});
+        
+        const {statusCode } = await request(app).get('/api/v2/carts/3/asdd/dsad/sa#$%').auth(token,{type: 'bearer'});
+        
+        expect(statusCode).toEqual(400);
+        ;
+    });
+    
+    test("400, PUT bad request en el enpoint", async ()=>{
+        const token = await generateJWT({role:'god'});
+        let data={};
+        
+        const {statusCode } = await request(app).put('/api/v2/carts/76/sda/sd*&&^^').auth(token,{type: 'bearer'}).send(data);
+        
+        expect(statusCode).toEqual(400);
+        
+    });
+    
+    test("400, POST bad request en el enpoint", async ()=>{
+        const token = await generateJWT({role:'god'});
+        let data={};
+        
+        const {statusCode } = await request(app).post('/api/v2/carts/300/asdd/qwe/uim/LMAO').auth(token,{type: 'bearer'}).send(data);
+        
+        expect(statusCode).toEqual(400);
+        
+    });
+    
+    test("400, DELETE bad request en el enpoint", async ()=>{
+        const token = await generateJWT({role:'god'});
+        
+        const { body, statusCode } = await request(app).delete('/api/v2/carts/3/que/cosa').auth(token,{type: 'bearer'});
+        
+        expect(statusCode).toEqual(400);
+        expect(body.Mensaje).toEqual('Bad Request.');
+    });
+    
+}) 
+
+test("Limpio el servidor ", async()=>{
+    //await sequelize.Start();ni idea como volverla abrrir
+    await sequelize.sync({ force: true });
+
+    const pro = await db.Product.findOne({where: {id_product: 1}});
+
+    expect(null).toEqual(pro);
+
+}); 
+
+///500 cierra la base
 describe("Base de datos apagada para los endpoint", () => {
 
     
@@ -345,44 +444,5 @@ describe("Base de datos apagada para los endpoint", () => {
 
 })
 
-describe("Errores en endpoints", () => {
 
-    test("400, GET bad request en el enpoint", async ()=>{
-        const token = await generateJWT({role:'god'});
-        
-        const {statusCode } = await request(app).get('/api/v2/carts/3/asdd/dsad/sa#$%').auth(token,{type: 'bearer'});
-        
-        expect(statusCode).toEqual(400);
-        ;
-    });
 
-    test("400, PUT bad request en el enpoint", async ()=>{
-        const token = await generateJWT({role:'god'});
-        data={};
-
-        const {statusCode } = await request(app).put('/api/v2/carts/76/sda/sd*&&^^').auth(token,{type: 'bearer'}).send(data);
-        
-        expect(statusCode).toEqual(400);
-        
-    });
-
-    test("400, POST bad request en el enpoint", async ()=>{
-        const token = await generateJWT({role:'god'});
-        data={};
-
-        const {statusCode } = await request(app).post('/api/v2/carts/300/asdd/qwe/uim/LMAO').auth(token,{type: 'bearer'}).send(data);
-        
-        expect(statusCode).toEqual(400);
-        
-    });
-
-    test("400, DELETE bad request en el enpoint", async ()=>{
-        const token = await generateJWT({role:'god'});
-        
-        const { body, statusCode } = await request(app).delete('/api/v2/carts/3/que/cosa').auth(token,{type: 'bearer'});
-        
-        expect(statusCode).toEqual(400);
-        expect(body.Mensaje).toEqual('Bad Request.');
-    });
-
-})
