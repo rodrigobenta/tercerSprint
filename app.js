@@ -35,25 +35,20 @@ app.post('/api/v2/login', login);
 
 
 app.get('/*', (req, res) => {
-    res.status(400).json({ Mensaje: 'Bad Request.' })
+    res.status(400).json({ Mensaje: 'Bad Request.' });
 })
 
 app.put('/*', (req, res) => {
-    res.status(400).json({ Mensaje: 'Bad Request.' })
+    res.status(400).json({ Mensaje: 'Bad Request.' });
 })
 
 app.post('/*', (req, res) => {
-    res.status(400).json({ Mensaje: 'Bad Request.' })
+    res.status(400).json({ Mensaje: 'Bad Request.' });
 })
 app.delete('/*', (req, res) => {
-    res.status(400).json({ Mensaje: 'Bad Request.' })
+    res.status(400).json({ Mensaje: 'Bad Request.' });
 })
 
-if(process.env.NODE_ENV !== 'test'){
-    app.listen(3000, () => {
-        console.log("corriendo en el puerto 3000");
-            sequelize.sync({/* force: true */});
-        })
-}
+if(process.env.NODE_ENV !== 'test'){ app.listen(3000, () => { sequelize.sync({/* force: true */}); }) };
 
 module.exports = { app };

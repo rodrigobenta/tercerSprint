@@ -46,7 +46,7 @@ test("Levanto el servidor ", async () => {
 
     const idC = categoriaProducto.dataValues.fk_id_category;
 
-    //console.log(body);
+    //
     expect(1).toEqual(idC);
     
     //expect(body).toMatchObject({ token: expect.any(String) });
@@ -97,7 +97,7 @@ describe("GET /api/v2/carts/id  <<Incorrecot>>", () => {
     
         const { body, statusCode } = await request(app).get('/api/v2/carts/75').auth(token,{type: 'bearer'});;
         
-        //console.log(body);
+        //
         expect(statusCode).toEqual(404);
         expect(body.msg).toEqual('No encuentra el usuario');
         //expect(body).toMatchObject({ token: expect.any(String) });
@@ -110,7 +110,7 @@ describe("GET /api/v2/carts/id  <<Incorrecot>>", () => {
     
         const { body, statusCode } = await request(app).get('/api/v2/carts/2').auth(token,{type: 'bearer'});;
         
-        //console.log(body);
+        //
         expect(statusCode).toEqual(401);
         expect(body.Mensaje).toEqual('No tienes permisos para ver.');
         //expect(body).toMatchObject({ token: expect.any(String) });
@@ -349,7 +349,7 @@ describe("PUT /api/v2/carts/id  <<Incorrecto>>", () => {
     
         const { body, statusCode } = await request(app).put('/api/v2/carts/2').auth(token,{type: 'bearer'});;
         
-        //console.log(body);
+        //
         expect(statusCode).toEqual(401);
         expect(body.Mensaje).toEqual('No tienes permisos');
         //expect(body).toMatchObject({ token: expect.any(String) });
@@ -363,7 +363,7 @@ describe("PUT /api/v2/carts/id  <<Incorrecto>>", () => {
 
 describe("Errores en endpoints", () => {
     
-    test("400, GET bad request en el enpoint", async ()=>{
+    test("400, GET bad request en el endpoint", async ()=>{
         const token = await generateJWT({role:'god'});
         
         const {statusCode } = await request(app).get('/api/v2/carts/3/asdd/dsad/sa#$%').auth(token,{type: 'bearer'});
@@ -372,7 +372,7 @@ describe("Errores en endpoints", () => {
         ;
     });
     
-    test("400, PUT bad request en el enpoint", async ()=>{
+    test("400, PUT bad request en el endpoint", async ()=>{
         const token = await generateJWT({role:'god'});
         let data={};
         
@@ -382,7 +382,7 @@ describe("Errores en endpoints", () => {
         
     });
     
-    test("400, POST bad request en el enpoint", async ()=>{
+    test("400, POST bad request en el endpoint", async ()=>{
         const token = await generateJWT({role:'god'});
         let data={};
         
@@ -392,7 +392,7 @@ describe("Errores en endpoints", () => {
         
     });
     
-    test("400, DELETE bad request en el enpoint", async ()=>{
+    test("400, DELETE bad request en el endpoint", async ()=>{
         const token = await generateJWT({role:'god'});
         
         const { body, statusCode } = await request(app).delete('/api/v2/carts/3/que/cosa').auth(token,{type: 'bearer'});

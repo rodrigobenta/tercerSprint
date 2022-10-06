@@ -3,8 +3,9 @@ const request = require("supertest");
 const { app } = require('../app');
 const generateJWT = require('../helpers/generateJWT');
 
-describe('Automatizacion de los test', () => {
 
+describe('Automatizacion de los test', () => {
+    
     test('GET Retorna un status 404 y un msg de que no hay productos en el sistema - guest', async () => {
         const token = await generateJWT({ role: 'guest' });
         const { body, statusCode } = await request(app).get('/api/v2/products').auth(token, { type: 'bearer' });
@@ -920,7 +921,7 @@ describe('Automatizacion de los test', () => {
 
     test("PUT con ADMIN NO puede ser title REPETIDO - ADMIN", async () => {
         const token = await generateJWT({ role: 'admin' });
-        const product = await db.Product.findOne();
+        const product = await db.Product.findOne({where: {title: "plantas"}});
         const id = product.dataValues.id_product;
         const data = {
             "title": "plantas",
@@ -943,7 +944,7 @@ describe('Automatizacion de los test', () => {
 
     test("PUT con GOD NO puede ser title REPETIDO - GOD", async () => {
         const token = await generateJWT({ role: 'god' });
-        const product = await db.Product.findOne();
+        const product = await db.Product.findOne({where: {title: "Bizcochos"}});
         const id = product.dataValues.id_product;
         const data = {
             "title": "Bizcocho",
@@ -1445,5 +1446,6 @@ describe('Automatizacion de los test', () => {
             Mensaje: expect.any(String)
         }));
     });
+
 
 });

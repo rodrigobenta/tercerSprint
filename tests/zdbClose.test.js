@@ -45,7 +45,6 @@ describe('Testeando con la DB apagada', () =>{
             const token = await generateJWT({ role: 'god'});
             const data = { "title": "Bizcochos" };
             const { body, statusCode } = await request(app).post('/api/v2/categories').auth(token, { type: 'bearer' }).send(data);
-            console.log(body)
             expect(statusCode).toEqual(500);
             expect(body).toEqual(expect.objectContaining({
                 msg: expect.any(String)
