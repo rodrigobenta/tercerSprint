@@ -36,13 +36,13 @@ const createPicture = async(req, res) => {
 const editPicture = async(req, res) => {
     try {
         const body = req.body;
-        const id = Number(req.params.id);
+        const id = req.params.id;
         const pictureAnterior = await db.Picture.findByPk(id)
         if (pictureAnterior){
             await db.Picture.update(body, {where: {id_picture: id}});
             const pictureEdit = await db.Picture.findByPk(id);
             res.status(200).json({ foto_anterior: pictureAnterior, foto_editada: pictureEdit});
-        }
+            }
         else res.status(404).json({msg: "La foto no existe"});
     } catch (error) {
         res.status(500).json({ msg: 'Server error.' });
