@@ -17,11 +17,11 @@ const db = require('../../database/models')
     ]
 
     const editUserVerify = [
-        check('email').isEmail().isLength({min: 1}).optional({nullable: true}),
-        check('username').isLength({min:1}).optional({nullable: true}),
-        check('password').isLength({min:1}).optional({nullable: true}),
-        check('firstname').isLength({min:1}).optional({nullable: true}),
-        check('lastname').isLength({min:1}).optional({nullable: true}),
+        check('email', 'Ingrese un email valido').isEmail().isLength({min: 1}).optional({nullable: true}),
+        check('username', 'El nombre de usuario es requerido').isLength({min:1}).optional({nullable: true}),
+        check('password', 'La contraseña es requerida y debe tener 6 caracteres').isLength({min:6}).optional({nullable: true}),
+        check('firstname', 'El nombre es requerido').isLength({min:1}).optional({nullable: true}),
+        check('lastname', 'El apellido es requerido').isLength({min:1}).optional({nullable: true}),
         check('email').custom(verifyEmail).isLength({min: 1}).optional({nullable: true}),
         check('username').custom(verifyUsername).optional({nullable: true}),
         (req,res,next) => {
@@ -43,7 +43,7 @@ const db = require('../../database/models')
             }
             else res.status(400).json({msg: 'El usuario no existe'});
         } catch (error) {
-            res.status(500).json({msg: 'Server error'});
+            res.status(500).json({msg: 'Server error.'});
         }
     }
 
