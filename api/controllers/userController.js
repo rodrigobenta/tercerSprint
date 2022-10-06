@@ -50,7 +50,7 @@ const listUsers = async (req,res) => {
 
 const listUserById = async (req,res) => {
 
-        if(req.user) res.status(200).json({ Usuario: req.user});
+        res.status(200).json({ Usuario: req.user});
 
 }
 
@@ -83,14 +83,11 @@ const editUserById = async (req,res) => {
 
 const deleteUserById = async (req,res) => {
 
-    if(req.user){
         const {password, ...userShow} = req.user;
         await db.User.destroy({
             where:{id_user: req.params.id}
         })
         res.status(200).json(userShow);
-    }
-
 }
 
 module.exports = {

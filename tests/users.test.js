@@ -55,6 +55,8 @@ describe("Login user", () => {
 
 describe("Listado de users", () => {
 
+    
+
     test("Listar usuarios con login de tipo Guest" , async() => {
         const token = await jwt({ role: 'guest' });
         const {statusCode} = await request(app).get('/api/v2/users').auth(token, { type: 'bearer' });
@@ -760,6 +762,30 @@ describe("Editar usuarios", () => {
         expect.stringContaining(`La contraseña es requerida y debe tener 6 caracteres`);
     });
 
+    test("Prueba de hash de contraseña, expect 200", async () => {
+        let userEdit = await db.User.findOne({where: {username: 'guest'}});
+        const idUrl = userEdit.dataValues.id_user; //usuario guest a editar
+        //establecemos permisos
+        let userDb = await db.User.findOne({where: {username: 'god'}});
+        const userId = userDb.dataValues.id_user; //id usuario GOD
+        const token = await jwt({ role: 'god', id_user: userId});
+        const user = {
+            password: "12345678"
+        }
+        const {statusCode, body} = await request(app).put(`/api/v2/users/${idUrl}`).auth(token, { type: 'bearer' }).send(user);
+        expect(statusCode).toBe(200);
+        expect(body).toEqual(expect.objectContaining(
+                                    {id_user: expect.any(Number),
+                                    email: expect.any(String),
+                                    username: expect.any(String),
+                                    firstname: expect.any(String),
+                                    password: expect.any(String),
+                                    lastname: expect.any(String),
+                                    role: expect.any(String),
+                                    profilepic: expect.any(String)
+                                }));
+    });
+
     test("Editar usuario con primer nombre vacio, expect 400", async () => {
         let userEdit = await db.User.findOne({where: {username: 'guest'}});
         const idUrl = userEdit.dataValues.id_user; //usuario guest a editar
@@ -1007,7 +1033,7 @@ describe("Test con BD vacías", () => {
         const token = await jwt({ role: 'god' });
         const {statusCode, body} = await request(app).get('/api/v2/users').auth(token, { type: 'bearer' });
         expect(statusCode).toBe(400);
-    });
+    }); 
 });
 
 

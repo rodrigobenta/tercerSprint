@@ -2,3 +2,5 @@
 /.vscode
 /config.js
 /app.js
+/coverage
+
