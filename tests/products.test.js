@@ -918,6 +918,52 @@ describe('Automatizacion de los test', () => {
         }))
     });
 
+    test("PUT con ADMIN NO puede ser title REPETIDO - ADMIN", async () => {
+        const token = await generateJWT({ role: 'admin' });
+        const product = await db.Product.findOne();
+        const id = product.dataValues.id_product;
+        const data = {
+            "title": "plantas",
+            "stock" : 10,
+            "price" : 100,
+            "description" : "Una descripcion",
+            "mostwanted" : 0,
+            "fk_id_category":1
+        }
+        const { body, statusCode } = await request(app).put(`/api/v2/products/${id}`).auth(token, { type: 'bearer' }).send(data);
+        expect(statusCode).toEqual(400);
+        expect(body).toEqual(expect.objectContaining({
+            errors : expect.arrayContaining([
+                expect.objectContaining({
+                    msg: expect.any(String)
+                })
+            ])
+        }));
+    });
+
+    test("PUT con GOD NO puede ser title REPETIDO - GOD", async () => {
+        const token = await generateJWT({ role: 'god' });
+        const product = await db.Product.findOne();
+        const id = product.dataValues.id_product;
+        const data = {
+            "title": "Bizcocho",
+            "stock" : 10,
+            "price" : 100,
+            "description" : "Una descripcion",
+            "mostwanted" : 0,
+            "fk_id_category":1
+        }
+        const { body, statusCode } = await request(app).put(`/api/v2/products/${id}`).auth(token, { type: 'bearer' }).send(data);
+        expect(statusCode).toEqual(400);
+        expect(body).toEqual(expect.objectContaining({
+            errors : expect.arrayContaining([
+                expect.objectContaining({
+                    msg: expect.any(String)
+                })
+            ])
+        }));
+    });
+
     test("PUT con ADMIN NO puede ser title VACIO - ADMIN", async () => {
         const token = await generateJWT({ role: 'admin' });
         const product = await db.Product.findOne();
@@ -941,7 +987,7 @@ describe('Automatizacion de los test', () => {
         }));
     });
 
-    test("PUT con ADMIN NO puede ser title VACIO - GOD", async () => {
+    test("PUT con GOD NO puede ser title VACIO - GOD", async () => {
         const token = await generateJWT({ role: 'god' });
         const product = await db.Product.findOne();
         const id = product.dataValues.id_product;
@@ -987,7 +1033,7 @@ describe('Automatizacion de los test', () => {
         }));
     });
 
-    test("PUT con ADMIN NO puede ser STOCK < a 0 - GOD", async () => {
+    test("PUT con GOD NO puede ser STOCK < a 0 - GOD", async () => {
         const token = await generateJWT({ role: 'god' });
         const product = await db.Product.findOne();
         const id = product.dataValues.id_product;
@@ -1033,7 +1079,7 @@ describe('Automatizacion de los test', () => {
         }));
     });
 
-    test("PUT con ADMIN NO puede ser PRICE < a 0 - GOD", async () => {
+    test("PUT con GOD NO puede ser PRICE < a 0 - GOD", async () => {
         const token = await generateJWT({ role: 'god' });
         const product = await db.Product.findOne();
         const id = product.dataValues.id_product;
@@ -1079,7 +1125,7 @@ describe('Automatizacion de los test', () => {
         }));
     })
 
-    test("PUT con ADMIN NO puede ser DESCRIPCION NO PUEDE SER VACIA- god", async () => {
+    test("PUT con GOD NO puede ser DESCRIPCION NO PUEDE SER VACIA- god", async () => {
         const token = await generateJWT({ role: 'god' });
         const product = await db.Product.findOne();
         const id = product.dataValues.id_product;
@@ -1126,10 +1172,32 @@ describe('Automatizacion de los test', () => {
         }));
     });
 
-    test("PUT con ADMIN NO puede ser MOSTWANTED tiene que ser 0 o 1 - GOD", async () => {
+    test("PUT con GOD NO puede ser MOSTWANTED tiene que ser 0 o 1 - GOD", async () => {
         const token = await generateJWT({ role: 'god' });
         const product = await db.Product.findOne();
         const id = product.dataValues.id_product;
+        const data = {
+            "title": "title",
+            "stock" : 10,
+            "price" : 100,
+            "description" : "Una descripcion",
+            "mostwanted" : 99,
+            "fk_id_category":1
+        }
+        const { body, statusCode } = await request(app).put(`/api/v2/products/${id}`).auth(token, { type: 'bearer' }).send(data);
+        expect(statusCode).toEqual(400);
+        expect(body).toEqual(expect.objectContaining({
+            errors : expect.arrayContaining([
+                expect.objectContaining({
+                    msg: expect.any(String)
+                })
+            ])
+        }));
+    });
+
+    test("PUT con GOD NO existe el producto- GOD", async () => {
+        const token = await generateJWT({ role: 'god' });
+        const id = 12345;
         const data = {
             "title": "title",
             "stock" : 10,
@@ -1377,4 +1445,5 @@ describe('Automatizacion de los test', () => {
             Mensaje: expect.any(String)
         }));
     });
+
 });

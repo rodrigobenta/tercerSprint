@@ -56,7 +56,7 @@ const existProductListVerify = async (req,res,next) => {
             next();
         } else res.status(404).json({ msg: 'No existen productos o categoria especificada.' });
     }catch(error){
-        res.status(error).json({ msg: 'Server error.'});
+        res.status(500).json({ msg: 'Server error middelware.'});
     }
 }
 
@@ -74,7 +74,7 @@ const existProductListByIdVerify = async (req,res,next) => {
             next();
         } else res.status(404).json({ msg: 'No existe el producto.' });
     } catch (error) {
-        res.status(500).json({ msg: 'Server error.'});
+        res.status(500).json({ msg: 'Server error middelware.'});
     }
   
 }
@@ -93,9 +93,9 @@ const existProductListKeywordVerify = async (req,res,next) => {
         if (list[0] != null) {
             req.list = list;
             next(); 
-        } else res.status(404).json({ msg: 'No hay ningun producto con esa palabra.' })
+        } else res.status(404).json({ msg: 'No hay ningun producto con esa palabra.' });
     }catch(error){
-        res.status(500).json({ msg: 'Server error.'});
+        res.status(500).json({ msg: 'Server error middelware.'});
     }
 }
 
@@ -112,9 +112,9 @@ const existProductListMostwantedVerify = async (req,res,next) => {
         if (mostWanted[0] != null) {
             req.mostwanted = mostWanted;
             next();
-        } else res.status(404).json({ msg: 'No hay productos requeridos.' })
+        } else res.status(404).json({ msg: 'No hay productos requeridos.' });
     }catch(error){
-        res.status(500).json({ msg: 'Server error.'});
+        res.status(500).json({ msg: 'Server error middelware.'});
     }
 }
 
@@ -132,9 +132,9 @@ const existProductEditVerify = async (req,res,next) => {
             req.category= category;
             next();
         }
-        else return res.status(404).json({ msg: 'No existe el producto.' })
+        else return res.status(404).json({ msg: 'No existe el producto.' });
     }catch(error){
-        res.send(500).json({ msg: 'Server error.' })
+        res.status(500).json({ msg: 'Server error middelware.' });
     }
 }
 
@@ -156,7 +156,7 @@ const existProductDeleteVerify = async (req,res,next) => {
             } else res.status(409).json({ msg: 'Ese producto tiene un carro asociado y por ende no se puede borrar' })
         } else res.status(404).json({ msg: 'Ese producto no existe.' })
     }catch(error){
-        res.status(500).json({ msg: 'Server error.' });
+        res.status(500).json({ msg: 'Server error middelware.' });
     }
 }
 
@@ -166,7 +166,7 @@ const verifyRoleCreateDelete = (req,res,next) => {
         if(role === 'guest') res.status(401).json({msg: 'No tiene permisos para crear o eliminar productos'});
         else next();
     } catch (error) {
-        res.status(500).json({msg: 'Server error.' });
+        res.status(500).json({msg: 'Server error middelware.' });
     }
 }
 
@@ -176,7 +176,7 @@ const verifyRoleEdit = (req,res,next) => {
         if(role == 'guest') res.status(401).json({msg: 'No tiene permisos para editar productos'});
         else next();
     } catch (error) {
-        res.status(500).json({msg: 'Server error'});
+        res.status(500).json({msg: 'Server error middelware'});
     }
 }
 

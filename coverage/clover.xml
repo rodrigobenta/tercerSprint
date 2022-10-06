@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1665021826312" clover="3.2.0">
-  <project timestamp="1665021826312" name="All files">
-    <metrics statements="717" coveredstatements="522" conditionals="133" coveredconditionals="70" methods="107" coveredmethods="71" elements="957" coveredelements="663" complexity="0" loc="717" ncloc="717" packages="7" files="31" classes="31"/>
+<coverage generated="1665065199367" clover="3.2.0">
+  <project timestamp="1665065199367" name="All files">
+    <metrics statements="686" coveredstatements="520" conditionals="125" coveredconditionals="71" methods="103" coveredmethods="71" elements="914" coveredelements="662" complexity="0" loc="686" ncloc="686" packages="7" files="31" classes="31"/>
     <package name="tercerSprint">
       <metrics statements="36" coveredstatements="29" conditionals="2" coveredconditionals="1" methods="5" coveredmethods="0"/>
       <file name="app.js" path="/Users/mateotambascoferreira/Desktop/Bootcamp/SPRINT/SPRINT3/tercerSprint/app.js">
@@ -45,7 +45,7 @@
       </file>
     </package>
     <package name="tercerSprint.api.controllers">
-      <metrics statements="257" coveredstatements="115" conditionals="44" coveredconditionals="4" methods="32" coveredmethods="17"/>
+      <metrics statements="227" coveredstatements="108" conditionals="36" coveredconditionals="4" methods="28" coveredmethods="17"/>
       <file name="cartsControllers.js" path="/Users/mateotambascoferreira/Desktop/Bootcamp/SPRINT/SPRINT3/tercerSprint/api/controllers/cartsControllers.js">
         <metrics statements="60" coveredstatements="4" conditionals="10" coveredconditionals="0" methods="3" coveredmethods="0"/>
         <line num="1" count="3" type="stmt"/>
@@ -190,74 +190,44 @@
         <line num="78" count="3" type="stmt"/>
       </file>
       <file name="productController.js" path="/Users/mateotambascoferreira/Desktop/Bootcamp/SPRINT/SPRINT3/tercerSprint/api/controllers/productController.js">
-        <metrics statements="67" coveredstatements="44" conditionals="8" coveredconditionals="0" methods="11" coveredmethods="7"/>
+        <metrics statements="37" coveredstatements="37" conditionals="0" coveredconditionals="0" methods="7" coveredmethods="7"/>
+        <line num="1" count="3" type="stmt"/>
         <line num="2" count="3" type="stmt"/>
-        <line num="3" count="3" type="stmt"/>
-        <line num="7" count="3" type="stmt"/>
+        <line num="6" count="3" type="stmt"/>
         <line num="8" count="6" type="stmt"/>
         <line num="9" count="6" type="stmt"/>
-        <line num="11" count="6" type="stmt"/>
-        <line num="12" count="6" type="stmt"/>
-        <line num="15" count="0" type="stmt"/>
-        <line num="19" count="3" type="stmt"/>
-        <line num="20" count="3" type="stmt"/>
+        <line num="10" count="6" type="stmt"/>
+        <line num="14" count="3" type="stmt"/>
+        <line num="16" count="3" type="stmt"/>
+        <line num="17" count="3" type="stmt"/>
+        <line num="18" count="3" type="stmt"/>
         <line num="21" count="3" type="stmt"/>
-        <line num="22" count="3" type="stmt"/>
         <line num="23" count="3" type="stmt"/>
-        <line num="25" count="0" type="stmt"/>
-        <line num="26" count="0" type="stmt"/>
-        <line num="27" count="0" type="stmt"/>
-        <line num="29" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="30" count="0" type="stmt"/>
-        <line num="34" count="3" type="stmt"/>
-        <line num="35" count="3" type="stmt"/>
-        <line num="36" count="3" type="stmt"/>
-        <line num="38" count="3" type="stmt"/>
+        <line num="24" count="3" type="stmt"/>
+        <line num="25" count="3" type="stmt"/>
+        <line num="29" count="3" type="stmt"/>
+        <line num="31" count="3" type="stmt"/>
+        <line num="32" count="3" type="stmt"/>
+        <line num="33" count="3" type="stmt"/>
+        <line num="37" count="3" type="stmt"/>
         <line num="39" count="3" type="stmt"/>
-        <line num="41" count="0" type="stmt"/>
-        <line num="42" count="0" type="stmt"/>
-        <line num="43" count="0" type="stmt"/>
-        <line num="45" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="46" count="0" type="stmt"/>
-        <line num="50" count="3" type="stmt"/>
-        <line num="51" count="3" type="stmt"/>
-        <line num="52" count="3" type="stmt"/>
-        <line num="53" count="3" type="stmt"/>
-        <line num="54" count="3" type="stmt"/>
-        <line num="56" count="0" type="stmt"/>
-        <line num="57" count="0" type="stmt"/>
-        <line num="58" count="0" type="stmt"/>
-        <line num="60" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="61" count="0" type="stmt"/>
+        <line num="40" count="3" type="stmt"/>
+        <line num="41" count="3" type="stmt"/>
+        <line num="42" count="3" type="stmt"/>
+        <line num="46" count="3" type="stmt"/>
+        <line num="47" count="2" type="stmt"/>
+        <line num="49" count="2" type="stmt"/>
+        <line num="50" count="2" type="stmt"/>
+        <line num="51" count="2" type="stmt"/>
+        <line num="52" count="2" type="stmt"/>
+        <line num="58" count="2" type="stmt"/>
+        <line num="59" count="2" type="stmt"/>
+        <line num="63" count="3" type="stmt"/>
         <line num="65" count="3" type="stmt"/>
         <line num="66" count="3" type="stmt"/>
         <line num="67" count="3" type="stmt"/>
         <line num="68" count="3" type="stmt"/>
-        <line num="69" count="3" type="stmt"/>
-        <line num="70" count="3" type="stmt"/>
-        <line num="72" count="0" type="stmt"/>
-        <line num="73" count="0" type="stmt"/>
-        <line num="74" count="0" type="stmt"/>
-        <line num="76" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="77" count="0" type="stmt"/>
-        <line num="81" count="3" type="stmt"/>
-        <line num="82" count="2" type="stmt"/>
-        <line num="83" count="2" type="stmt"/>
-        <line num="85" count="2" type="stmt"/>
-        <line num="86" count="2" type="stmt"/>
-        <line num="87" count="2" type="stmt"/>
-        <line num="88" count="2" type="stmt"/>
-        <line num="95" count="2" type="stmt"/>
-        <line num="96" count="2" type="stmt"/>
-        <line num="98" count="0" type="stmt"/>
-        <line num="102" count="3" type="stmt"/>
-        <line num="103" count="3" type="stmt"/>
-        <line num="104" count="3" type="stmt"/>
-        <line num="105" count="3" type="stmt"/>
-        <line num="106" count="3" type="stmt"/>
-        <line num="107" count="3" type="stmt"/>
-        <line num="109" count="0" type="stmt"/>
-        <line num="113" count="3" type="stmt"/>
+        <line num="72" count="3" type="stmt"/>
       </file>
       <file name="userController.js" path="/Users/mateotambascoferreira/Desktop/Bootcamp/SPRINT/SPRINT3/tercerSprint/api/controllers/userController.js">
         <metrics statements="56" coveredstatements="23" conditionals="12" coveredconditionals="1" methods="6" coveredmethods="2"/>
@@ -320,7 +290,7 @@
       </file>
     </package>
     <package name="tercerSprint.api.middleware">
-      <metrics statements="218" coveredstatements="188" conditionals="60" coveredconditionals="45" methods="26" coveredmethods="22"/>
+      <metrics statements="218" coveredstatements="194" conditionals="60" coveredconditionals="45" methods="26" coveredmethods="22"/>
       <file name="cartListMiddleware.js" path="/Users/mateotambascoferreira/Desktop/Bootcamp/SPRINT/SPRINT3/tercerSprint/api/middleware/cartListMiddleware.js">
         <metrics statements="8" coveredstatements="2" conditionals="4" coveredconditionals="0" methods="1" coveredmethods="0"/>
         <line num="1" count="3" type="stmt"/>
@@ -341,35 +311,35 @@
         <line num="6" count="3" type="stmt"/>
         <line num="10" count="13" type="stmt"/>
         <line num="14" count="3" type="stmt"/>
-        <line num="15" count="18" type="stmt"/>
-        <line num="16" count="18" type="stmt"/>
-        <line num="17" count="18" type="cond" truecount="2" falsecount="0"/>
-        <line num="18" count="9" type="stmt"/>
+        <line num="15" count="14" type="stmt"/>
+        <line num="16" count="14" type="stmt"/>
+        <line num="17" count="14" type="cond" truecount="2" falsecount="0"/>
+        <line num="18" count="7" type="stmt"/>
         <line num="19" count="6" type="cond" truecount="2" falsecount="0"/>
         <line num="20" count="3" type="stmt"/>
         <line num="21" count="3" type="stmt"/>
         <line num="22" count="3" type="stmt"/>
-        <line num="24" count="9" type="stmt"/>
+        <line num="24" count="7" type="stmt"/>
         <line num="25" count="6" type="cond" truecount="2" falsecount="0"/>
         <line num="26" count="3" type="stmt"/>
         <line num="27" count="3" type="stmt"/>
         <line num="28" count="3" type="stmt"/>
-        <line num="31" count="6" type="stmt"/>
+        <line num="31" count="2" type="stmt"/>
         <line num="35" count="3" type="stmt"/>
-        <line num="36" count="8" type="stmt"/>
-        <line num="37" count="8" type="stmt"/>
-        <line num="38" count="8" type="stmt"/>
-        <line num="39" count="8" type="stmt"/>
+        <line num="36" count="7" type="stmt"/>
+        <line num="37" count="7" type="stmt"/>
+        <line num="38" count="7" type="stmt"/>
+        <line num="39" count="7" type="stmt"/>
         <line num="40" count="6" type="cond" truecount="2" falsecount="0"/>
         <line num="41" count="4" type="stmt"/>
         <line num="42" count="4" type="stmt"/>
         <line num="43" count="4" type="stmt"/>
         <line num="45" count="2" type="stmt"/>
-        <line num="47" count="2" type="stmt"/>
+        <line num="47" count="1" type="stmt"/>
         <line num="51" count="3" type="stmt"/>
-        <line num="52" count="11" type="stmt"/>
-        <line num="55" count="11" type="stmt"/>
-        <line num="56" count="11" type="stmt"/>
+        <line num="52" count="10" type="stmt"/>
+        <line num="55" count="10" type="stmt"/>
+        <line num="56" count="10" type="stmt"/>
         <line num="59" count="9" type="cond" truecount="2" falsecount="0"/>
         <line num="60" count="7" type="cond" truecount="2" falsecount="0"/>
         <line num="61" count="5" type="stmt"/>
@@ -378,17 +348,17 @@
         <line num="64" count="5" type="stmt"/>
         <line num="65" count="2" type="stmt"/>
         <line num="66" count="2" type="stmt"/>
-        <line num="68" count="2" type="stmt"/>
+        <line num="68" count="1" type="stmt"/>
         <line num="72" count="3" type="stmt"/>
       </file>
       <file name="handleErrors.js" path="/Users/mateotambascoferreira/Desktop/Bootcamp/SPRINT/SPRINT3/tercerSprint/api/middleware/handleErrors.js">
         <metrics statements="7" coveredstatements="7" conditionals="2" coveredconditionals="2" methods="1" coveredmethods="1"/>
         <line num="1" count="3" type="stmt"/>
         <line num="3" count="3" type="stmt"/>
-        <line num="4" count="47" type="stmt"/>
-        <line num="5" count="47" type="cond" truecount="2" falsecount="0"/>
-        <line num="6" count="31" type="stmt"/>
-        <line num="8" count="16" type="stmt"/>
+        <line num="4" count="50" type="stmt"/>
+        <line num="5" count="50" type="cond" truecount="2" falsecount="0"/>
+        <line num="6" count="33" type="stmt"/>
+        <line num="8" count="17" type="stmt"/>
         <line num="11" count="3" type="stmt"/>
       </file>
       <file name="picturesMiddelware.js" path="/Users/mateotambascoferreira/Desktop/Bootcamp/SPRINT/SPRINT3/tercerSprint/api/middleware/picturesMiddelware.js">
@@ -411,15 +381,15 @@
         <line num="34" count="0" type="stmt"/>
         <line num="35" count="0" type="stmt"/>
         <line num="39" count="3" type="stmt"/>
-        <line num="40" count="35" type="stmt"/>
-        <line num="41" count="35" type="stmt"/>
-        <line num="42" count="35" type="cond" truecount="2" falsecount="0"/>
-        <line num="43" count="32" type="stmt"/>
+        <line num="40" count="33" type="stmt"/>
+        <line num="41" count="33" type="stmt"/>
+        <line num="42" count="33" type="cond" truecount="2" falsecount="0"/>
+        <line num="43" count="30" type="stmt"/>
         <line num="45" count="0" type="stmt"/>
         <line num="49" count="3" type="stmt"/>
       </file>
       <file name="productMiddleware.js" path="/Users/mateotambascoferreira/Desktop/Bootcamp/SPRINT/SPRINT3/tercerSprint/api/middleware/productMiddleware.js">
-        <metrics statements="90" coveredstatements="80" conditionals="24" coveredconditionals="21" methods="10" coveredmethods="10"/>
+        <metrics statements="90" coveredstatements="86" conditionals="24" coveredconditionals="21" methods="10" coveredmethods="10"/>
         <line num="1" count="3" type="stmt"/>
         <line num="2" count="3" type="stmt"/>
         <line num="3" count="3" type="stmt"/>
@@ -428,50 +398,50 @@
         <line num="7" count="3" type="stmt"/>
         <line num="17" count="18" type="stmt"/>
         <line num="21" count="3" type="stmt"/>
-        <line num="29" count="12" type="stmt"/>
+        <line num="29" count="15" type="stmt"/>
         <line num="33" count="3" type="stmt"/>
-        <line num="34" count="12" type="stmt"/>
-        <line num="35" count="12" type="stmt"/>
-        <line num="36" count="12" type="stmt"/>
-        <line num="37" count="12" type="cond" truecount="2" falsecount="0"/>
+        <line num="34" count="13" type="stmt"/>
+        <line num="35" count="13" type="stmt"/>
+        <line num="36" count="13" type="stmt"/>
+        <line num="37" count="13" type="cond" truecount="2" falsecount="0"/>
         <line num="38" count="6" type="stmt"/>
-        <line num="46" count="6" type="stmt"/>
+        <line num="46" count="7" type="stmt"/>
         <line num="54" count="12" type="cond" truecount="2" falsecount="0"/>
         <line num="55" count="6" type="stmt"/>
         <line num="56" count="6" type="stmt"/>
         <line num="57" count="6" type="stmt"/>
-        <line num="59" count="0" type="stmt"/>
+        <line num="59" count="1" type="stmt"/>
         <line num="63" count="3" type="stmt"/>
-        <line num="65" count="6" type="stmt"/>
-        <line num="66" count="6" type="stmt"/>
+        <line num="65" count="7" type="stmt"/>
+        <line num="66" count="7" type="stmt"/>
         <line num="72" count="6" type="cond" truecount="2" falsecount="0"/>
         <line num="73" count="3" type="stmt"/>
         <line num="74" count="3" type="stmt"/>
         <line num="75" count="3" type="stmt"/>
-        <line num="77" count="0" type="stmt"/>
+        <line num="77" count="1" type="stmt"/>
         <line num="82" count="3" type="stmt"/>
-        <line num="83" count="6" type="stmt"/>
-        <line num="84" count="6" type="stmt"/>
-        <line num="85" count="6" type="stmt"/>
+        <line num="83" count="7" type="stmt"/>
+        <line num="84" count="7" type="stmt"/>
+        <line num="85" count="7" type="stmt"/>
         <line num="93" count="6" type="cond" truecount="2" falsecount="0"/>
         <line num="94" count="3" type="stmt"/>
         <line num="95" count="3" type="stmt"/>
         <line num="96" count="3" type="stmt"/>
-        <line num="98" count="0" type="stmt"/>
+        <line num="98" count="1" type="stmt"/>
         <line num="102" count="3" type="stmt"/>
-        <line num="103" count="6" type="stmt"/>
-        <line num="104" count="6" type="stmt"/>
+        <line num="103" count="7" type="stmt"/>
+        <line num="104" count="7" type="stmt"/>
         <line num="112" count="6" type="cond" truecount="2" falsecount="0"/>
         <line num="113" count="3" type="stmt"/>
         <line num="114" count="3" type="stmt"/>
         <line num="115" count="3" type="stmt"/>
-        <line num="117" count="0" type="stmt"/>
+        <line num="117" count="1" type="stmt"/>
         <line num="121" count="3" type="stmt"/>
-        <line num="122" count="2" type="stmt"/>
-        <line num="123" count="2" type="stmt"/>
-        <line num="124" count="2" type="stmt"/>
-        <line num="125" count="2" type="stmt"/>
-        <line num="126" count="2" type="stmt"/>
+        <line num="122" count="3" type="stmt"/>
+        <line num="123" count="3" type="stmt"/>
+        <line num="124" count="3" type="stmt"/>
+        <line num="125" count="3" type="stmt"/>
+        <line num="126" count="3" type="stmt"/>
         <line num="127" count="2" type="cond" truecount="1" falsecount="1"/>
         <line num="128" count="2" type="stmt"/>
         <line num="129" count="2" type="cond" truecount="1" falsecount="1"/>
@@ -480,11 +450,11 @@
         <line num="132" count="2" type="stmt"/>
         <line num="133" count="2" type="stmt"/>
         <line num="135" count="0" type="stmt"/>
-        <line num="137" count="0" type="stmt"/>
+        <line num="137" count="1" type="stmt"/>
         <line num="141" count="3" type="stmt"/>
-        <line num="142" count="9" type="stmt"/>
-        <line num="143" count="9" type="stmt"/>
-        <line num="145" count="9" type="stmt"/>
+        <line num="142" count="11" type="stmt"/>
+        <line num="143" count="11" type="stmt"/>
+        <line num="145" count="11" type="stmt"/>
         <line num="147" count="9" type="cond" truecount="2" falsecount="0"/>
         <line num="148" count="7" type="stmt"/>
         <line num="149" count="7" type="cond" truecount="1" falsecount="1"/>
@@ -496,18 +466,18 @@
         <line num="155" count="4" type="stmt"/>
         <line num="156" count="0" type="stmt"/>
         <line num="157" count="2" type="stmt"/>
-        <line num="159" count="0" type="stmt"/>
+        <line num="159" count="2" type="stmt"/>
         <line num="163" count="3" type="stmt"/>
-        <line num="164" count="29" type="stmt"/>
-        <line num="165" count="29" type="stmt"/>
-        <line num="166" count="29" type="cond" truecount="2" falsecount="0"/>
-        <line num="167" count="27" type="stmt"/>
+        <line num="164" count="31" type="stmt"/>
+        <line num="165" count="31" type="stmt"/>
+        <line num="166" count="31" type="cond" truecount="2" falsecount="0"/>
+        <line num="167" count="29" type="stmt"/>
         <line num="169" count="0" type="stmt"/>
         <line num="173" count="3" type="stmt"/>
-        <line num="174" count="13" type="stmt"/>
-        <line num="175" count="13" type="stmt"/>
-        <line num="176" count="13" type="cond" truecount="2" falsecount="0"/>
-        <line num="177" count="12" type="stmt"/>
+        <line num="174" count="16" type="stmt"/>
+        <line num="175" count="16" type="stmt"/>
+        <line num="176" count="16" type="cond" truecount="2" falsecount="0"/>
+        <line num="177" count="15" type="stmt"/>
         <line num="179" count="0" type="stmt"/>
         <line num="183" count="3" type="stmt"/>
       </file>
@@ -547,16 +517,16 @@
         <metrics statements="14" coveredstatements="13" conditionals="2" coveredconditionals="1" methods="1" coveredmethods="1"/>
         <line num="1" count="3" type="stmt"/>
         <line num="3" count="3" type="stmt"/>
-        <line num="4" count="134" type="stmt"/>
-        <line num="5" count="134" type="stmt"/>
-        <line num="6" count="134" type="stmt"/>
-        <line num="7" count="134" type="cond" truecount="1" falsecount="1"/>
-        <line num="8" count="134" type="stmt"/>
-        <line num="9" count="134" type="stmt"/>
-        <line num="10" count="134" type="stmt"/>
-        <line num="11" count="134" type="stmt"/>
-        <line num="12" count="134" type="stmt"/>
-        <line num="13" count="134" type="stmt"/>
+        <line num="4" count="137" type="stmt"/>
+        <line num="5" count="137" type="stmt"/>
+        <line num="6" count="137" type="stmt"/>
+        <line num="7" count="137" type="cond" truecount="1" falsecount="1"/>
+        <line num="8" count="137" type="stmt"/>
+        <line num="9" count="137" type="stmt"/>
+        <line num="10" count="137" type="stmt"/>
+        <line num="11" count="137" type="stmt"/>
+        <line num="12" count="137" type="stmt"/>
+        <line num="13" count="137" type="stmt"/>
         <line num="15" count="0" type="stmt"/>
         <line num="22" count="3" type="stmt"/>
       </file>
@@ -771,18 +741,17 @@
       </file>
     </package>
     <package name="tercerSprint.helpers">
-      <metrics statements="42" coveredstatements="39" conditionals="18" coveredconditionals="13" methods="12" coveredmethods="12"/>
+      <metrics statements="41" coveredstatements="38" conditionals="18" coveredconditionals="14" methods="12" coveredmethods="12"/>
       <file name="generateJWT.js" path="/Users/mateotambascoferreira/Desktop/Bootcamp/SPRINT/SPRINT3/tercerSprint/helpers/generateJWT.js">
-        <metrics statements="9" coveredstatements="8" conditionals="2" coveredconditionals="1" methods="3" coveredmethods="3"/>
+        <metrics statements="8" coveredstatements="7" conditionals="2" coveredconditionals="1" methods="3" coveredmethods="3"/>
         <line num="1" count="3" type="stmt"/>
-        <line num="3" count="3" type="stmt"/>
-        <line num="5" count="3" type="stmt"/>
-        <line num="6" count="139" type="stmt"/>
-        <line num="7" count="139" type="stmt"/>
-        <line num="11" count="139" type="cond" truecount="1" falsecount="1"/>
-        <line num="12" count="0" type="stmt"/>
-        <line num="14" count="139" type="stmt"/>
-        <line num="19" count="3" type="stmt"/>
+        <line num="4" count="3" type="stmt"/>
+        <line num="5" count="142" type="stmt"/>
+        <line num="6" count="142" type="stmt"/>
+        <line num="10" count="142" type="cond" truecount="1" falsecount="1"/>
+        <line num="11" count="0" type="stmt"/>
+        <line num="13" count="142" type="stmt"/>
+        <line num="18" count="3" type="stmt"/>
       </file>
       <file name="pasarATrue.js" path="/Users/mateotambascoferreira/Desktop/Bootcamp/SPRINT/SPRINT3/tercerSprint/helpers/pasarATrue.js">
         <metrics statements="5" coveredstatements="5" conditionals="4" coveredconditionals="4" methods="3" coveredmethods="3"/>
@@ -809,14 +778,14 @@
         <line num="11" count="3" type="stmt"/>
       </file>
       <file name="verifyProduct.js" path="/Users/mateotambascoferreira/Desktop/Bootcamp/SPRINT/SPRINT3/tercerSprint/helpers/verifyProduct.js">
-        <metrics statements="8" coveredstatements="8" conditionals="4" coveredconditionals="3" methods="2" coveredmethods="2"/>
+        <metrics statements="8" coveredstatements="8" conditionals="4" coveredconditionals="4" methods="2" coveredmethods="2"/>
         <line num="1" count="3" type="stmt"/>
         <line num="3" count="3" type="stmt"/>
-        <line num="4" count="30" type="stmt"/>
-        <line num="7" count="30" type="cond" truecount="1" falsecount="1"/>
+        <line num="4" count="32" type="stmt"/>
+        <line num="7" count="32" type="cond" truecount="2" falsecount="0"/>
         <line num="10" count="3" type="stmt"/>
-        <line num="11" count="30" type="stmt"/>
-        <line num="12" count="30" type="cond" truecount="2" falsecount="0"/>
+        <line num="11" count="32" type="stmt"/>
+        <line num="12" count="32" type="cond" truecount="2" falsecount="0"/>
         <line num="15" count="3" type="stmt"/>
       </file>
       <file name="verifyUser.js" path="/Users/mateotambascoferreira/Desktop/Bootcamp/SPRINT/SPRINT3/tercerSprint/helpers/verifyUser.js">
