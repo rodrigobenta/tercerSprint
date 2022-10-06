@@ -51,4 +51,6 @@ app.delete('/*', (req, res) => {
 
 if(process.env.NODE_ENV !== 'test'){ app.listen(3000, () => { sequelize.sync({/* force: true */}); }) };
 
+
 module.exports = { app };
+

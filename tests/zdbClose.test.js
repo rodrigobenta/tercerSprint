@@ -62,7 +62,7 @@ describe('Testeando con la DB apagada', () =>{
         }); 
     });
 
-    describe("Chequeo 500 Server error ruta Usuarios", () => {
+    describe("Tests de usuarios", () => {
 
         test("Server error 500 Login Usuarios", async () => {
             const user = {username:"god", password: "123456"};
@@ -218,7 +218,7 @@ describe('Testeando con la DB apagada', () =>{
         }); 
     });
 
-    describe("Base de datos apagada para los endpoint", () => {
+    describe("Tests de carts", () => {
 
     
         test("500, Falla la base de datos en GET", async ()=>{
@@ -253,6 +253,59 @@ describe('Testeando con la DB apagada', () =>{
         });
     
     
+    
+    })
+
+    describe("Tests de pictures", () => {
+
+        test("GET /products/:id/pictures retorna un status 500 y un mensaje de server error", async() => {
+            const token = await generateJWT({role: "god"});
+            const idProduct = 2;
+            const {statusCode, body} = await request(app).get(`/api/v2/products/${idProduct}/pictures`).auth(token, {type: "bearer"})
+            expect(statusCode).toBe(500);
+            expect(body).toEqual(expect.objectContaining({
+                msg: expect.any(String)
+            }))
+        })
+        test("GET /pictures?product=id retorna un status 500 y un mensaje de server error", async() => {
+            const token = await generateJWT({role: "god"});
+            const idProducto = 2;
+            const {body, statusCode} = await request(app).get(`/api/v2/pictures?product=${idProducto}`).auth(token, {type: "bearer"});
+            expect(statusCode).toBe(500);
+            expect(body).toEqual(expect.objectContaining({
+                msg: expect.any(String)
+            }))
+        })
+        test("GET /pictures/:id retorna un status 500 y un mensaje de server error", async() => {
+            const token = await generateJWT({role: "god"});
+            const idPicture = 2;
+            const {statusCode, body} = await request(app).get(`/api/v2/pictures/${idPicture}`).auth(token, {type: "bearer"})
+            expect(statusCode).toBe(500);
+            expect(body).toEqual(expect.objectContaining({
+                msg: expect.any(String)
+            }))
+        })
+        test("PUT /pictures/:id retorna un status 500 y un mensaje de server error cuando no se pasa una URL a editar", async() => {
+            const token = await generateJWT({role: "god"});
+            const idPicture = 2;
+            const data = {
+                description: "algo raro"
+            }
+            const {statusCode, body} = await request(app).put(`/api/v2/pictures/${idPicture}`).auth(token, {type: "bearer"}).send(data);
+            expect(statusCode).toBe(500);
+            expect(body).toEqual(expect.objectContaining({
+                msg: expect.any(String)
+            }))
+        })
+        test("DELETE /pictures/:id retorna un status 500 y un mensaje de server error", async() => {
+            const token = await generateJWT({role: "god"});
+            const idPicture = 2;
+            const {statusCode, body} = await request(app).delete(`/api/v2/pictures/${idPicture}`).auth(token, {type: "bearer"});
+            expect(statusCode).toBe(500);
+            expect(body).toEqual(expect.objectContaining({
+                msg: expect.any(String)
+            }))
+        })
     
     })
 });

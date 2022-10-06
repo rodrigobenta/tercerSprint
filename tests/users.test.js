@@ -55,6 +55,8 @@ describe("Login user", () => {
 
 describe("Listado de users", () => {
 
+    
+
     test("Listar usuarios con login de tipo Guest" , async() => {
         const token = await jwt({ role: 'guest' });
         const {statusCode} = await request(app).get('/api/v2/users').auth(token, { type: 'bearer' });
@@ -1007,7 +1009,7 @@ describe("Test con BD vacías", () => {
         const token = await jwt({ role: 'god' });
         const {statusCode, body} = await request(app).get('/api/v2/users').auth(token, { type: 'bearer' });
         expect(statusCode).toBe(400);
-    });
+    }); 
 });
 
 

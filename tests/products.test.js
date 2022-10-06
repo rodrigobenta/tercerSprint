@@ -568,6 +568,63 @@ describe('Automatizacion de los test', () => {
         }));
     });
 
+    test("POST con GOD = 201 ", async () => {
+        const token = await generateJWT({ role: 'god' });
+
+        const dataCategoria = { "title": "Alimentos"};
+        await request(app).post('/api/v2/categories').auth(token, { type: 'bearer' }).send(dataCategoria);
+
+        const category = await db.Category.findOne({where: {title: "Alimentos"}});
+        const id = category.dataValues.id_category;
+
+        const dataProducto = {
+            "title": "Bizcochos",
+            "stock" : 100,
+            "price" : 10,
+            "description" : "Una descripcion de bizcochos",
+            "mostwanted" : 1,
+            "fk_id_category": `${id}`
+        };
+        const { body, statusCode } = await request(app).post('/api/v2/products').auth(token, { type: 'bearer' }).send(dataProducto);
+
+        const product = await db.Product.findOne({where: { title: "Bizcochos"}});
+        const idProduct = product.dataValues.id_product;
+
+        const dataPicture = { 
+            "url": "estoesunaurldeunbizcocho.com",
+            "description": "esto es una descripcion de un bizcocho",
+            "fk_id_product": `${idProduct}`
+        };
+        await request(app).post('/api/v2/pictures').auth(token, { type: 'bearer' }).send(dataPicture); 
+
+        const dataUser = {
+            "email": "email2@email.com",
+            "username": "username2",
+            "password": "123456",
+            "firstname": "prueba2",
+            "lastname": "prueba2",
+            "profilepic": "notengo2",
+            "role": "guest"
+        };
+        await request(app).post('/api/v2/users').auth(token, { type: 'bearer' }).send(dataUser); 
+        const user = await db.User.findOne({where:{email : dataUser.email}})
+        const idUser = user.dataValues.id_user ;
+
+        const dataCart = [{
+            "fk_id_product": `${idProduct}`,
+            "quantity": 3
+        }]
+         await request(app).put(`/api/v2/carts/${idUser}`).auth(token, { type: 'bearer' }).send(dataCart); 
+
+        expect(statusCode).toEqual(201);
+        expect(body).toEqual(expect.objectContaining({
+            newProduct : expect.objectContaining({
+                id_product : expect.any(Number)
+            })
+        }));
+    });
+    
+
     test("POST con ADMIN = 201 ", async () => {
         const token = await generateJWT({ role: 'admin' });
 
@@ -607,64 +664,7 @@ describe('Automatizacion de los test', () => {
             "role": "guest"
         };
         await request(app).post('/api/v2/users').auth(token, { type: 'bearer' }).send(dataUser); 
-        const user = await db.User.findOne({where:{email : dataUser.email}})
-        const idUser = user.dataValues.id_user ;
 
-        const dataCart = {
-            "fk_id_user": `${idUser}`,
-            "fk_id_product": `${idProduct}`,
-            "quantity": 3
-        }
-        await request(app).put(`/api/v2/carts/${idUser}`).auth(token, { type: 'bearer' }).send(dataCart); 
-
-        expect(statusCode).toEqual(201);
-        expect(body).toEqual(expect.objectContaining({
-            newProduct : expect.objectContaining({
-                id_product : expect.any(Number)
-            })
-        }));
-    });
-
-    test("POST con GOD = 201 ", async () => {
-        const token = await generateJWT({ role: 'god' });
-
-        const dataCategoria = { "title": "Alimentos"};
-        await request(app).post('/api/v2/categories').auth(token, { type: 'bearer' }).send(dataCategoria);
-
-        const category = await db.Category.findOne({where: {title: "Alimentos"}});
-        const id = category.dataValues.id_category;
-
-        const dataProducto = {
-            "title": "Bizcochos",
-            "stock" : 100,
-            "price" : 10,
-            "description" : "Una descripcion de bizcochos",
-            "mostwanted" : 1,
-            "fk_id_category": `${id}`
-        };
-        const { body, statusCode } = await request(app).post('/api/v2/products/').auth(token, { type: 'bearer' }).send(dataProducto);
-
-        const product = await db.Product.findOne({where: { title: "Bizcochos"}});
-        const idProduct = product.dataValues.id_product;
-
-        const dataPicture = { 
-            "url": "estoesunaurldeunbizcocho.com",
-            "description": "esto es una descripcion de un bizcocho",
-            "fk_id_product": `${idProduct}`
-        };
-        await request(app).post('/api/v2/pictures').auth(token, { type: 'bearer' }).send(dataPicture); 
-
-        const dataUser = {
-            "email": "email2@email.com",
-            "username": "username2",
-            "password": "123456",
-            "firstname": "prueba2",
-            "lastname": "prueba2",
-            "profilepic": "notengo2",
-            "role": "guest"
-        };
-        await request(app).post('/api/v2/users').auth(token, { type: 'bearer' }).send(dataUser); 
-        
         expect(statusCode).toEqual(201);
         expect(body).toEqual(expect.objectContaining({
             newProduct : expect.objectContaining({
@@ -942,29 +942,6 @@ describe('Automatizacion de los test', () => {
         }));
     });
 
-    test("PUT con GOD NO puede ser title REPETIDO - GOD", async () => {
-        const token = await generateJWT({ role: 'god' });
-        const product = await db.Product.findOne({where: {title: "Bizcochos"}});
-        const id = product.dataValues.id_product;
-        const data = {
-            "title": "Bizcocho",
-            "stock" : 10,
-            "price" : 100,
-            "description" : "Una descripcion",
-            "mostwanted" : 0,
-            "fk_id_category":1
-        }
-        const { body, statusCode } = await request(app).put(`/api/v2/products/${id}`).auth(token, { type: 'bearer' }).send(data);
-        expect(statusCode).toEqual(400);
-        expect(body).toEqual(expect.objectContaining({
-            errors : expect.arrayContaining([
-                expect.objectContaining({
-                    msg: expect.any(String)
-                })
-            ])
-        }));
-    });
-
     test("PUT con ADMIN NO puede ser title VACIO - ADMIN", async () => {
         const token = await generateJWT({ role: 'admin' });
         const product = await db.Product.findOne();
@@ -1198,48 +1175,17 @@ describe('Automatizacion de los test', () => {
 
     test("PUT con GOD NO existe el producto- GOD", async () => {
         const token = await generateJWT({ role: 'god' });
-        const id = 12345;
+        const idProduct = 12345;
         const data = {
-            "title": "title",
             "stock" : 10,
             "price" : 100,
             "description" : "Una descripcion",
-            "mostwanted" : 99,
-            "fk_id_category":1
+            "mostwanted" : 0
         }
-        const { body, statusCode } = await request(app).put(`/api/v2/products/${id}`).auth(token, { type: 'bearer' }).send(data);
-        expect(statusCode).toEqual(400);
+        const { body, statusCode } = await request(app).put(`/api/v2/products/${idProduct}`).auth(token, { type: 'bearer' }).send(data);
+        expect(statusCode).toEqual(404);
         expect(body).toEqual(expect.objectContaining({
-            errors : expect.arrayContaining([
-                expect.objectContaining({
-                    msg: expect.any(String)
-                })
-            ])
-        }));
-    });
-
-    test("PUT con ADMIN devuelve un 200 - ADMIN", async () => {
-        const token = await generateJWT({ role: 'admin' });
-
-        const producto = await db.Product.findOne({where: {title: "Bizcochos"}});
-        const id = producto.dataValues.id_product;
-
-        const category = await db.Category.findOne({where: {title: "Alimentos"}});
-        const idC = category.dataValues.id_category;
-        const data = {
-            "title": "Grisines",
-            "stock" : 10,
-            "price" : 100,
-            "description" : "Una descripcion de mates",
-            "mostwanted" : 1,
-            "fk_id_category":`${idC}`
-        }
-        const { body, statusCode } = await request(app).put(`/api/v2/products/${id}`).auth(token, { type: 'bearer' }).send(data);
-        expect(statusCode).toEqual(200);
-        expect(body).toEqual(expect.objectContaining({
-            ProductoEditado: expect.objectContaining({
-                id_product: expect.any(Number)
-            })
+            msg: expect.any(String)
         }));
     });
 
@@ -1312,8 +1258,8 @@ describe('Automatizacion de los test', () => {
         }));
     });
 
-    test('DELETE Retorna un status 200 se borro el PRODUCT que no tiene ni CARRO ni PICTURE  - admin', async () => {
-        const token = await generateJWT({ role: 'admin' });
+    test('DELETE Retorna un status 200 se borro el PRODUCT que no tiene ni CARRO ni PICTURE  - god', async () => {
+        const token = await generateJWT({ role: 'god' });
 
         const picture = await db.Picture.findOne();
         const idP = picture.dataValues.id_picture;
@@ -1323,9 +1269,23 @@ describe('Automatizacion de los test', () => {
         const idP2 = picture2.dataValues.id_picture;
         await request(app).delete(`/api/v2/pictures/${idP2}`).auth(token, { type: 'bearer' });
 
+        const user = await db.User.findOne({where:{email : "email2@email.com"}})
+        const idUser = user.dataValues.id_user ;
+
+        const dataCart ={}
+        await request(app).put(`/api/v2/carts/${idUser}`).auth(token, { type: 'bearer' }).send(dataCart);
+
+        const user2 = await db.User.findOne();
+        const idUser2 = user2.dataValues.id_user;
+        await request(app).delete(`/api/v2/users/${idUser2}`).auth(token, { type: 'bearer' });
+
+        const user3 = await db.User.findOne();
+        const idUser3 = user3.dataValues.id_user;
+        await request(app).delete(`/api/v2/users/${idUser3}`).auth(token, { type: 'bearer' });
+
         const product = await db.Product.findOne();
         const id = product.dataValues.id_product;
-        const { body, statusCode } = await request(app).delete(`/api/v2/products/${id}`).auth(token, { type: 'bearer' });
+        const { body, statusCode } =  await request(app).delete(`/api/v2/products/${id}`).auth(token, { type: 'bearer' });
 
         expect(statusCode).toEqual(200);
         expect(body).toEqual(expect.objectContaining({
@@ -1335,8 +1295,8 @@ describe('Automatizacion de los test', () => {
         }));
     });
 
-    test('DELETE Retorna un status 200 se borro el PRODUCT que no tiene ni CARRO ni PICTURE  - god', async () => {
-        const token = await generateJWT({ role: 'god' });
+    test('DELETE Retorna un status 200 se borro el PRODUCT que no tiene ni CARRO ni PICTURE  - admin', async () => {
+        const token = await generateJWT({ role: 'admin' });
 
         const product = await db.Product.findOne();
         const id = product.dataValues.id_product;
@@ -1349,14 +1309,6 @@ describe('Automatizacion de los test', () => {
         const category2 = await db.Category.findOne();
         const idCategory2 = category2.dataValues.id_category;
         await request(app).delete(`/api/v2/categories/${idCategory2}`).auth(token, {type: 'bearer'})
-
-        const user = await db.User.findOne();
-        const idUser = user.dataValues.id_user;
-        await request(app).delete(`/api/v2/users/${idUser}`).auth(token, { type: 'bearer' });
-
-        const user2 = await db.User.findOne();
-        const idUser2 = user2.dataValues.id_user;
-        await request(app).delete(`/api/v2/users/${idUser2}`).auth(token, { type: 'bearer' });
 
         expect(statusCode).toEqual(200);
         expect(body).toEqual(expect.objectContaining({
@@ -1446,6 +1398,5 @@ describe('Automatizacion de los test', () => {
             Mensaje: expect.any(String)
         }));
     });
-
-
+ 
 });

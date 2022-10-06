@@ -6,8 +6,8 @@ const router = express.Router();
 
 
 router.get('/', verifyJWT, listPictures);
-router.get('/:id' , verifyJWT,listPictureById);
-router.post('/',verifyJWT, verifyRoleEditPicture, createPictureVerify, createPicture);
+router.get('/:id', verifyJWT, listPictureById);
+router.post('/', verifyJWT, verifyRoleEditPicture, createPictureVerify, createPicture);
 router.put('/:id', verifyJWT,verifyRoleEditPicture, editPictureVerify ,editPicture);
 router.delete('/:id',verifyJWT, verifyRoleEditPicture, existPictureVerify, deletePicture);
 

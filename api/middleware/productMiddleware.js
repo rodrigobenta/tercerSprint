@@ -124,9 +124,9 @@ const existProductEditVerify = async (req,res,next) => {
         const { idProduct } = req.params;
         let category = null;
         const product = await db.Product.findByPk(Number(idProduct));
-        if (!fk_id_category)  category = product.fk_id_category;
-        else category = fk_id_category;
         if (product){
+            if (!fk_id_category)  category = product.fk_id_category;
+            else category = fk_id_category;
             req.body = body;
             req.id = idProduct;
             req.category= category;
@@ -161,23 +161,18 @@ const existProductDeleteVerify = async (req,res,next) => {
 }
 
 const verifyRoleCreateDelete = (req,res,next) => {
-    try {
-        let role = req.role;
-        if(role === 'guest') res.status(401).json({msg: 'No tiene permisos para crear o eliminar productos'});
-        else next();
-    } catch (error) {
-        res.status(500).json({msg: 'Server error middelware.' });
-    }
+
+    let role = req.role;
+    if(role === 'guest') res.status(401).json({msg: 'No tiene permisos para crear o eliminar productos'});
+    else next();
 }
 
 const verifyRoleEdit = (req,res,next) => {
-    try {
-        let role = req.role;
-        if(role == 'guest') res.status(401).json({msg: 'No tiene permisos para editar productos'});
-        else next();
-    } catch (error) {
-        res.status(500).json({msg: 'Server error middelware'});
-    }
+
+    let role = req.role;
+    if(role == 'guest') res.status(401).json({msg: 'No tiene permisos para editar productos'});
+    else next();
+
 }
 
 module.exports = {
