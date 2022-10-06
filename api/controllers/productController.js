@@ -12,7 +12,7 @@ const listProduct = async (req, res) => {
         return res.status(200).json({ Productos: products });
     } catch (error) {
   
-        res.status(500).json({ mensaje: 'Server error' });
+        res.status(500).json({ mensaje: 'Server error en controller.' });
     }
 }
 
@@ -27,7 +27,7 @@ const listProductByID = async (req, res) => {
             errObj[er.path] = er.message;
         })
         if (errObj) res.status(500).json(errObj);
-        else res.status(500).json({ msg: 'Server error.' });
+        else res.status(500).json({ msg: 'Server error en controller.' });
     }
 }
 
@@ -43,7 +43,7 @@ const listProductByKeyword = async (req, res) => {
             errObj[er.path] = er.message;
         })
         if (errObj) res.status(500).json(errObj);
-        else res.status(500).json({ msg: 'Server error.' });
+        else res.status(500).json({ msg: 'Server error en controller.' });
     }
 }
 
@@ -58,7 +58,7 @@ const listMostWantedProduct = async (req, res) => {
             errObj[er.path] = er.message;
         })
         if (errObj) res.status(500).json(errObj);
-        else res.status(500).json({ msg: 'Server error.' });
+        else res.status(500).json({ msg: 'Server error en controller.' });
     }
 }
 
@@ -74,7 +74,7 @@ const createProduct = async (req, res) => {
             errObj[er.path] = er.message;
         })
         if (errObj) res.status(500).json(errObj);
-        else res.status(500).json({ msg: 'Server error.' });
+        else res.status(500).json({ msg: 'Server error en controller.' });
     }
 }
 
@@ -95,7 +95,7 @@ const editProduct = async (req, res) => {
         pasarATrueOrFalse(productEdited);
         res.status(200).json({ ProductoEditado: productEdited });
     } catch (error) {
-        res.status(500).json({ msg: 'Server error.', error });
+        res.status(500).json({ msg: 'Server error en controller.' });
     }
 }
 
@@ -106,7 +106,7 @@ const deleteProduct = async (req, res) => {
         await db.Product.destroy({ where: { id_product: id } });
         res.status(200).json({ oldData });
     } catch (error) {
-        res.status(500).json({ error });
+        res.status(500).json({ msg: 'Server error en controller.' });
     }
 }
 

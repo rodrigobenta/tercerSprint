@@ -34,20 +34,23 @@ describe("Ciclo de testing automatizado", () => {
     });
 
     test('POST Retorna un status 201 y la categoria creada (ROLE-GOD)', async () => {
-        const data2 = { "title": "jardineria" };
         const token = await generateJWT({ role: 'god'});
-        const { body, statusCode } = await request(app).post(`/api/v2/categories`).auth(token, { type: 'bearer'}).send(data2);
-        const category = await db.Category.findOne();
+
+        const categoria = { "title": "jardineria" };
+        
+        const { body, statusCode } = await request(app).post(`/api/v2/categories`).auth(token, { type: 'bearer'}).send(categoria);
+
+        const category = await db.Category.findOne({where: { title: 'jardineria'}});
         const idCategory = category.dataValues.id_category;
-        const data = { 
+        const producto = { 
             "title": "mesa",
             "stock": 3, 
             "description": "mesa familiar", 
             "price": 1236, 
             "fk_id_category": `${idCategory}`, 
-            "mostwanted": 1 
+            "mostwanted": 0 
             }
-        await request(app).post('/api/v2/products').auth(token, { type: 'bearer'}).send(data) // creo un producto 
+        await request(app).post('/api/v2/products').auth(token, { type: 'bearer'}).send(producto) // creo un producto 
         expect(statusCode).toEqual(201);
         expect(body).toEqual(expect.objectContaining({
             newCategory: expect.objectContaining({
@@ -57,9 +60,11 @@ describe("Ciclo de testing automatizado", () => {
     });
 
     test('POST Retorna un status 201 y la categoria creada (ROLE-GOD)', async () => {
-        const data = { "title": "pastas" };
         const token = await generateJWT({ role: 'god'});
-        const { body, statusCode } = await request(app).post(`/api/v2/categories`).auth(token, { type: 'bearer'}).send(data);
+
+        const categria = { "title": "pastas" };
+
+        const { body, statusCode } = await request(app).post(`/api/v2/categories`).auth(token, { type: 'bearer'}).send(categria);
         expect(statusCode).toEqual(201);
         expect(body).toEqual(expect.objectContaining({
             newCategory: expect.objectContaining({
@@ -69,9 +74,11 @@ describe("Ciclo de testing automatizado", () => {
     });
 
     test('POST Retorna un status 201 y la categoria creada (ROLE-ADMIN)', async () => {
-        const data = { "title": "muebles" };
         const token = await generateJWT({ role: 'admin'});
-        const { body, statusCode } = await request(app).post(`/api/v2/categories`).auth(token, { type: 'bearer'}).send(data);
+
+        const categria = { "title": "muebles" };
+    
+        const { body, statusCode } = await request(app).post(`/api/v2/categories`).auth(token, { type: 'bearer'}).send(categria);
         expect(statusCode).toEqual(201);
         expect(body).toEqual(expect.objectContaining({
             newCategory: expect.objectContaining({
@@ -158,7 +165,7 @@ describe("Ciclo de testing automatizado", () => {
     test('PUT Retorna un status 400 y un mensaje que el titulo no puede ir vacio (ROLE-GOD)', async () => {
         const primer = await db.Category.findOne();
         const id = primer.dataValues.id_category + 1;
-        const data = { };
+        const data = {"title": "" };
         const token = await generateJWT({ role: 'god'});
         const { body, statusCode } = await request(app).put(`/api/v2/categories/${id}`).auth(token, { type: 'bearer'}).send(data);
         expect(statusCode).toEqual(400);
@@ -174,7 +181,7 @@ describe("Ciclo de testing automatizado", () => {
     test('PUT Retorna un status 400 y un mensaje que el titulo no puede ir vacio (ROLE-ADMIN)', async () => {
         const primer = await db.Category.findOne();
         const id = primer.dataValues.id_category + 1;
-        const data = { };
+        const data = { "title": ""};
         const token = await generateJWT({ role: 'admin'});
         const { body, statusCode } = await request(app).put(`/api/v2/categories/${id}`).auth(token, { type: 'bearer'}).send(data);
         expect(statusCode).toEqual(400);
@@ -188,10 +195,12 @@ describe("Ciclo de testing automatizado", () => {
     });
 
     test('PUT Retorna un status 200 y la categoria editada (ROLE-GOD)', async () => {
-        const primer = await db.Category.findOne();
-        const id = primer.dataValues.id_category + 1;
-        const data = { "title": "autos" };
         const token = await generateJWT({ role: 'god'});
+
+        const categoria = await db.Category.findOne({where:{title: 'pastas'}});
+        const id = categoria.dataValues.id_category;
+        const data = { "title": "autos" };
+        
         const { body, statusCode } = await request(app).put(`/api/v2/categories/${id}`).auth(token, { type: 'bearer'}).send(data);
         expect(statusCode).toEqual(200);
         expect(body).toEqual(expect.objectContaining({
@@ -202,11 +211,12 @@ describe("Ciclo de testing automatizado", () => {
     });
 
     test('PUT Retorna un status 200 y la categoria editada (ROLE-ADMIN)', async () => {
-        const primer = await db.Category.findOne();
-        const id = primer.dataValues.id_category + 2;
+        const primer = await db.Category.findOne({where:{title: 'muebles'}});
+        const id = primer.dataValues.id_category;
         const data = { "title": "golosinas" };
         const token = await generateJWT({ role: 'admin'});
         const { body, statusCode } = await request(app).put(`/api/v2/categories/${id}`).auth(token, { type: 'bearer'}).send(data);
+
         expect(statusCode).toEqual(200);
         expect(body).toEqual(expect.objectContaining({
             CategoryEdited: expect.objectContaining({
@@ -385,9 +395,11 @@ describe("Ciclo de testing automatizado", () => {
     });
 
     test('DELETE Retorna un status 409 y un mensaje de que no se puede eliminar porque tiene un producto asociado (ROLE-GOD)', async () => {
-        const primer = await db.Category.findOne();
-        const id = primer.dataValues.id_category;
         const token = await generateJWT({ role: 'god'});
+
+        const categoria = await db.Category.findOne({where: {title: 'jardineria'}});
+        const id = categoria.dataValues.id_category;
+        
         const { body, statusCode } = await request(app).delete(`/api/v2/categories/${id}`).auth(token, { type: 'bearer'});
         expect(statusCode).toEqual(409);
         expect(body).toEqual(expect.objectContaining({
@@ -396,9 +408,11 @@ describe("Ciclo de testing automatizado", () => {
     });
 
     test('DELETE Retorna un status 409 y un mensaje de que no se puede eliminar porque tiene un producto asociado (ROLE-ADMIN)', async () => {
-        const primer = await db.Category.findOne();
-        const id = primer.dataValues.id_category;
         const token = await generateJWT({ role: 'admin'});
+
+        const categoria = await db.Category.findOne({where: {title: 'jardineria'}});
+        const id = categoria.dataValues.id_category;
+        
         const { body, statusCode } = await request(app).delete(`/api/v2/categories/${id}`).auth(token, { type: 'bearer'});
         expect(statusCode).toEqual(409);
         expect(body).toEqual(expect.objectContaining({
@@ -406,13 +420,16 @@ describe("Ciclo de testing automatizado", () => {
         }));
     });
 
-    test.skip('DELETE Retorna un status 200 y la categoria eliminada (ROLE-GOD)', async () => {
+    test('DELETE Retorna un status 200 y la categoria eliminada (ROLE-GOD)', async () => {
+        const token = await generateJWT({ role: 'god'});
+
+        const primer = await db.Category.findOne();
+        const id = primer.dataValues.id_category;
+
         const product = await db.Product.findOne();
         const idProduct = product.dataValues.id_product;
-        const primer = await db.Category.findOne();
-        const id = primer.dataValues.id_category;
-        const token = await generateJWT({ role: 'god'});
         await request(app).delete(`/api/v2/products/${idProduct}`).auth(token, { type: 'bearer'});
+
         const { body, statusCode } = await request(app).delete(`/api/v2/categories/${id}`).auth(token, { type: 'bearer'});
         expect(statusCode).toEqual(200);
         expect(body).toEqual(expect.objectContaining({
@@ -422,7 +439,7 @@ describe("Ciclo de testing automatizado", () => {
         }));
     });
 
-    test.skip('DELETE Retorna un status 200 y la categoria eliminada (ROLE-GOD)', async () => {
+    test('DELETE Retorna un status 200 y la categoria eliminada (ROLE-GOD)', async () => {
         const primer = await db.Category.findOne();
         const id = primer.dataValues.id_category;
         const token = await generateJWT({ role: 'god'});
@@ -435,7 +452,7 @@ describe("Ciclo de testing automatizado", () => {
         }));
     });
 
-    test.skip('DELETE Retorna un status 200 y la categoria eliminada (ROLE-ADMIN)', async () => {
+    test('DELETE Retorna un status 200 y la categoria eliminada (ROLE-ADMIN)', async () => {
         const primer = await db.Category.findOne();
         const id = primer.dataValues.id_category;
         const token = await generateJWT({ role: 'admin'});
@@ -527,113 +544,6 @@ describe("Ciclo de testing automatizado", () => {
         expect(body).toEqual(expect.objectContaining({
             Mensaje: expect.any(String)
         }));
-    });
-
-    describe('Testeando con la DB apagada', () =>{
-        
-        beforeAll(() => {
-            db.sequelize.close();
-        });
-
-        test('GET Retorna un status 500 y devuelve un mensaje Server error (ROLE-GOD)', async () => {
-            const token = await generateJWT({ role: 'god'});
-            const { body, statusCode } = await request(app).get('/api/v2/categories').auth(token, { type: 'bearer'});
-            expect(statusCode).toEqual(500);
-            expect(body).toEqual(expect.objectContaining({
-                msg: expect.any(String)
-            }));
-        });
-    
-        test('GET Retorna un status 500 y devuelve un mensaje Server error (ROLE-GUEST)', async () => {
-            const token = await generateJWT({ role: 'guest'});
-            const { body, statusCode } = await request(app).get('/api/v2/categories').auth(token, { type: 'bearer'});
-            expect(statusCode).toEqual(500);
-            expect(body).toEqual(expect.objectContaining({
-                msg: expect.any(String)
-            }));
-        });
-    
-        test('GET Retorna un status 500 y devuelve un mensaje Server error (ROLE-ADMIN)', async () => {
-            const token = await generateJWT({ role: 'admin'});
-            const { body, statusCode } = await request(app).get('/api/v2/categories').auth(token, { type: 'bearer'});
-            expect(statusCode).toEqual(500);
-            expect(body).toEqual(expect.objectContaining({
-                msg: expect.any(String)
-            }));
-        });
-    
-        test('GET{id} Retorna un status 500 y devuelve un mensaje Server error (ROLE-GUEST)', async () => {
-            const id = 3;
-            const token = await generateJWT({ role: 'guest'});
-            const { body, statusCode } = await request(app).get(`/api/v2/categories/${id}`).auth(token, { type: 'bearer'});
-            expect(statusCode).toEqual(500);
-            expect(body).toEqual(expect.objectContaining({
-                msg: expect.any(String)
-            }));
-        });
-    
-        test('GET{id} Retorna un status 500 y devuelve un mensaje Server error (ROLE-ADMIN)', async () => {
-            const id = 3;
-            const token = await generateJWT({ role: 'admin'});
-            const { body, statusCode } = await request(app).get(`/api/v2/categories/${id}`).auth(token, { type: 'bearer'});
-            expect(statusCode).toEqual(500);
-            expect(body).toEqual(expect.objectContaining({
-                msg: expect.any(String)
-            }));
-        });
-    
-        test('GET{id} Retorna un status 500 y devuelve un mensaje Server error (ROLE-GOD)', async () => {
-            const id = 3;
-            const token = await generateJWT({ role: 'god'});
-            const { body, statusCode } = await request(app).get(`/api/v2/categories/${id}`).auth(token, { type: 'bearer'});
-            expect(statusCode).toEqual(500);
-            expect(body).toEqual(expect.objectContaining({
-                msg: expect.any(String)
-            }));
-        });
-    
-        test('PUT Retorna un status 500 y devuelve un mensaje Server error (ROLE-ADMIN)', async () => {
-            const id = 5;
-            const data = { "title": "muebles" };
-            const token = await generateJWT({ role: 'admin'});
-            const { body, statusCode } = await request(app).put(`/api/v2/categories/${id}`).auth(token, { type: 'bearer'}).send(data);
-            expect(statusCode).toEqual(500);
-            expect(body).toEqual(expect.objectContaining({
-                msg: expect.any(String)
-            }));
-        });
-    
-        test('PUT Retorna un status 500 y devuelve un mensaje Server error (ROLE-GOD)', async () => {
-            const id = 5;
-            const data = { "title": "muebles" };
-            const token = await generateJWT({ role: 'god'});
-            const { body, statusCode } = await request(app).put(`/api/v2/categories/${id}`).auth(token, { type: 'bearer'}).send(data);
-            expect(statusCode).toEqual(500);
-            expect(body).toEqual(expect.objectContaining({
-                msg: expect.any(String)
-            }));
-        });
-    
-        test('DELETE Retorna un status 500 y devuelve un mensaje Server error (ROLE-ADMIN)', async () => {
-            const id = 5;
-            const token = await generateJWT({ role: 'admin'});
-            const { body, statusCode } = await request(app).delete(`/api/v2/categories/${id}`).auth(token, { type: 'bearer'});
-            expect(statusCode).toEqual(500);
-            expect(body).toEqual(expect.objectContaining({
-                msg: expect.any(String)
-            }));
-        });
-    
-        test('DELETE Retorna un status 500 y devuelve un mensaje Server error (ROLE-GOD)', async () => {
-            const id = 5;
-            const token = await generateJWT({ role: 'god'});
-            const { body, statusCode } = await request(app).delete(`/api/v2/categories/${id}`).auth(token, { type: 'bearer'});
-            expect(statusCode).toEqual(500);
-            expect(body).toEqual(expect.objectContaining({
-                msg: expect.any(String)
-            }));
-        }); 
-
     });
  
 }); 
