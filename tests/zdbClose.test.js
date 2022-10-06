@@ -219,4 +219,41 @@ describe('Testeando con la DB apagada', () =>{
         }); 
     });
 
+    describe("Base de datos apagada para los endpoint", () => {
+
+    
+        test("500, Falla la base de datos en GET", async ()=>{
+            const token = await generateJWT({role:'god'});
+            
+            await db.sequelize.close();
+            const { body, statusCode } = await request(app).get('/api/v2/carts/3').auth(token,{type: 'bearer'});
+            
+            expect(statusCode).toEqual(500);
+            expect(body.Mensaje).toEqual('Server error');
+        });
+        
+        
+        
+        
+        test("500, Falla la base de datos en PUT", async ()=>{
+            await db.sequelize.close();
+            const token = await generateJWT({role:'god'});
+            
+            const data=[{
+                "fk_id_product": 1,
+                "quantity": 2 },
+                {
+                "fk_id_product": 2,
+                "quantity": 3 },
+        ];
+            
+            const { body, statusCode } = await request(app).put(`/api/v2/carts/1`).auth(token,{type: 'bearer'}).send(data);
+            
+            expect(statusCode).toEqual(500);
+            expect(body.Mensaje).toEqual('Server error (UpdateCart)');
+        });
+    
+    
+    
+    })
 });

@@ -5,7 +5,7 @@ const express = require('express');
 const usersRoutes = require('./api/routes/userRoutes');
 const productsRoutes = require('./api/routes/productRoute');
 const cartsRouter = require('./api/routes/cartsRoutes');
-const {login} = require('./api/controllers/userController');
+const { login } = require('./api/controllers/userController');
 const picturesRoutes = require('./api/routes/picturesRoutes');
 const categoryRoutes = require('./api/routes/categoryRoutes')
 const app = express();
@@ -34,19 +34,19 @@ app.post('/api/v2/login', login);
 
 
 
-app.get('/*', (req,res)=>{
-    res.status(400).json({ Mensaje: 'Bad Request.'})
+app.get('/*', (req, res) => {
+    res.status(400).json({ Mensaje: 'Bad Request.' })
 })
 
-app.put('/*', (req,res)=>{
-    res.status(400).json({ Mensaje: 'Bad Request.'})
+app.put('/*', (req, res) => {
+    res.status(400).json({ Mensaje: 'Bad Request.' })
 })
 
-app.post('/*', (req,res)=>{
-    res.status(400).json({ Mensaje: 'Bad Request.'})
+app.post('/*', (req, res) => {
+    res.status(400).json({ Mensaje: 'Bad Request.' })
 })
-app.delete('/*', (req,res)=>{
-    res.status(400).json({ Mensaje: 'Bad Request.'})
+app.delete('/*', (req, res) => {
+    res.status(400).json({ Mensaje: 'Bad Request.' })
 })
 
 if(process.env.NODE_ENV !== 'test'){
@@ -57,4 +57,3 @@ if(process.env.NODE_ENV !== 'test'){
 }
 
 module.exports = { app };
-
