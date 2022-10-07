@@ -325,6 +325,46 @@ describe("PUT /api/v2/carts/id  <<Correctos>>", () => {
 
     });
 
+
+    test("200,role: guest// Update de un producto que no existe, lo descarta", async () => {
+
+        const token = await generateJWT({role:'guest', id_user: 3});
+        ///las dos juntas                      guest
+        
+        const data=[
+            {
+                "fk_id_product": 652,
+                "quantity": 25 },
+                {
+                "fk_id_product": 3,
+                "quantity": 7 },
+                
+        ];
+
+        
+        const { body, statusCode } = await request(app).put(`/api/v2/carts/3`).auth(token,{type: 'bearer'}).send(data);
+        
+        expect(statusCode).toEqual(200);
+        expect(body.productos.length).toBeGreaterThan(0);
+        expect(body.productos2.length).toBe(0);
+        expect(body.productos3.length).toBe(0);
+
+
+    });
+
+    test("200,role: GOD// Update Vacio, a usuario CON carro /role: guest", async () => {
+        const token = await generateJWT({role:'guest', id_user: 3});
+        
+        const data={};
+        
+        const { body, statusCode } = await request(app).put(`/api/v2/carts/3`).auth(token,{type: 'bearer'}).send(data);
+        
+        expect(statusCode).toEqual(200);
+        expect(body.msg).toEqual('Total $ 0');
+
+
+    });
+
 });
 
 
