@@ -31,6 +31,19 @@ describe("Login user", () => {
         });
     });
 
+    test("Login de usuario ruta alias" , async() => {
+        const user = {username:"god", password: "123456"};
+        const{statusCode, body} = await request(app).post('/api/v2/login').send(user);
+
+        expect(statusCode).toBe(200);
+        expect.objectContaining({
+            success: true,
+            message: 'Authorized',
+            user: expect.objectContaining({id: expect.any(Number), username: expect.any(String)}),
+            token: expect.any(String)
+        });
+    });
+
     test("Login de usuario error contrasena", async() => {
         const user = {username:"god", password: "1"};
         const{statusCode} = await request(app).post('/api/v2/users/login').send(user);

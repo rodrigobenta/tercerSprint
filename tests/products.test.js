@@ -1138,7 +1138,7 @@ describe('Automatizacion de los test', () => {
             "mostwanted" : 99,
             "fk_id_category":1
         }
-   
+
         const { body, statusCode } = await request(app).put(`/api/v2/products/${id}`).auth(token, { type: 'bearer' }).send(data);
         expect(statusCode).toEqual(400);
         expect(body).toEqual(expect.objectContaining({
@@ -1238,8 +1238,8 @@ describe('Automatizacion de los test', () => {
 
     test('DELETE Retorna un status 409 PRODUCT  tiene un CART asociado - admin', async () => {
         const token = await generateJWT({ role: 'admin' });
-        const product = await db.Product.findOne();
-        const id = product.dataValues.id_product + 1;
+        const product = await db.Product.findOne({where:{title: 'plantaCarnivora'}});
+        const id = product.dataValues.id_product;
         const { body, statusCode } = await request(app).delete(`/api/v2/products/${id}`).auth(token, { type: 'bearer' });
         expect(statusCode).toEqual(409);
         expect(body).toEqual(expect.objectContaining({
@@ -1249,7 +1249,7 @@ describe('Automatizacion de los test', () => {
 
     test('DELETE Retorna un status 409 PRODUCT  tiene un CART asociado  - god', async () => {
         const token = await generateJWT({ role: 'god' });
-        const product = await db.Product.findOne();
+        const product = await db.Product.findOne({where:{title: 'plantaCarnivora'}});
         const id = product.dataValues.id_product;
         const { body, statusCode } = await request(app).delete(`/api/v2/products/${id}`).auth(token, { type: 'bearer' });
         expect(statusCode).toEqual(409);
@@ -1283,7 +1283,7 @@ describe('Automatizacion de los test', () => {
         const idUser3 = user3.dataValues.id_user;
         await request(app).delete(`/api/v2/users/${idUser3}`).auth(token, { type: 'bearer' });
 
-        const product = await db.Product.findOne();
+        const product = await db.Product.findOne({where: {title: 'Bizcochos'}});
         const id = product.dataValues.id_product;
         const { body, statusCode } =  await request(app).delete(`/api/v2/products/${id}`).auth(token, { type: 'bearer' });
 
@@ -1298,11 +1298,12 @@ describe('Automatizacion de los test', () => {
     test('DELETE Retorna un status 200 se borro el PRODUCT que no tiene ni CARRO ni PICTURE  - admin', async () => {
         const token = await generateJWT({ role: 'admin' });
 
-        const product = await db.Product.findOne();
+        const product = await db.Product.findOne({where:{title: 'plantaCarnivora'}});
         const id = product.dataValues.id_product;
         const { body, statusCode } = await request(app).delete(`/api/v2/products/${id}`).auth(token, { type: 'bearer' });
 
         const category = await db.Category.findOne();
+
         const idCategory = category.dataValues.id_category;
         await request(app).delete(`/api/v2/categories/${idCategory}`).auth(token, {type: 'bearer'})
 
