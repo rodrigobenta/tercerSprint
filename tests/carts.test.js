@@ -8,12 +8,11 @@ const bcrypt = require("bcrypt");
 
 //Preparar base de pruebas
 
-test("Levanto el servidor ", async () => {
+test("Levanto el servidor", async () => {
 
     await sequelize.sync({ force: true });
 
     const token = await generateJWT({role:'god'});
-
 
     let password = "123456";
     const salt = await bcrypt.genSalt(10); 
@@ -28,38 +27,50 @@ test("Levanto el servidor ", async () => {
     //const category = await db.Category.findOne({where: {title: "Jardineria"}});
     //const id = category.dataValues.id_category;
 
-    const producto1 = {"title": "Iphone 13", "stock": 50, "description": "quien se compraesto?", "price": 70000, "fk_id_category": 1, "mostwanted": 1};
-    const producto2 = {"title": "audi A3", "stock": 15, "description": "nunca taxi noseque", "price": 500100, "fk_id_category": 1, "mostwanted": 1};
-    const producto3 = {"title": "panDuro", "stock": 1000, "description": "esta duricimo", "price": 15, "fk_id_category": 1, "mostwanted": 0};
-    const producto4 = {"title": "mesa", "stock": 0, "description": "calidad precio", "price": 1101, "fk_id_category": 1, "mostwanted": 0};
-    const producto5 = {"title": "reloj", "stock": 0, "description": "cucu el del pajaro", "price": 10101, "fk_id_category": 1, "mostwanted": 0};
-    const producto6 = {"title": "chocolate", "stock": 50, "description": "calidad precio", "price": 10101, "fk_id_category": 1, "mostwanted": 1};
+    const producto1 = {"title": "Iphone 13", "stock": 50, "description": "Gama alta", "price": 70000, "fk_id_category": 1, "mostwanted": 1};
+    const producto2 = {"title": "Audi A3", "stock": 15, "description": "Nunca taxi", "price": 500100, "fk_id_category": 1, "mostwanted": 1};
+    const producto3 = {"title": "Pan", "stock": 1000, "description": "Fresco", "price": 15, "fk_id_category": 1, "mostwanted": 0};
+    const producto4 = {"title": "Mesa", "stock": 0, "description": "Calidad baja", "price": 1101, "fk_id_category": 1, "mostwanted": 0};
+    const producto5 = {"title": "Reloj", "stock": 0, "description": "Cucu el del pajaro", "price": 10101, "fk_id_category": 1, "mostwanted": 0};
+    const producto6 = {"title": "Chocolate", "stock": 50, "description": "Negro", "price": 10101, "fk_id_category": 1, "mostwanted": 1};
     
     await db.Product.bulkCreate([producto1, producto2, producto3, producto4, producto5, producto6]);
 
     const data=[{"fk_id_product": 1, "quantity": 2}];
     const { body, statusCode } = await request(app).put(`/api/v2/carts/2`).auth(token,{type: 'bearer'}).send(data);
 
-
-
     const categoriaProducto = await db.Product.findOne({where: {title: "chocolate"}});
 
     const idC = categoriaProducto.dataValues.fk_id_category;
-
-    //
     expect(1).toEqual(idC);
-    
-    //expect(body).toMatchObject({ token: expect.any(String) });
+    expect(body).toEqual(expect.objectContaining({msg: expect.stringContaining('Total $'),
+                                                msg1: expect.stringContaining('Total USD'),
+                                                msg2: expect.stringContaining('Productos en Stock'),
+                                                productos: expect.arrayContaining([expect.objectContaining(
+                                                    {
+                                                    title: expect.any(String),
+                                                    quantity: expect.any(Number)
+                                                    })
+                                                ]),
+                                                msg3: expect.stringContaining('Productos con stock limitado'),
+                                                productos2: expect.any(Array),
+                                                msg4: expect.any(String),
+                                                productos3: expect.any(Array)}));
+
 });
 
-//Enpiezan los test     
+//Empiezan los test     
 describe("GET /api/v2/carts/id  <<Correctos>>", () => {
-    test("200,role: GOD// cartOfID, Debe devolver un carrito vacio ", async () => {
+    test("200,role: GOD// cartOfID, Debe devolver un carrito vacio", async () => {
         const token = await generateJWT({role:'god'});
-
         const { body, statusCode } = await request(app).get('/api/v2/carts/1').auth(token,{type: 'bearer'});
         expect(statusCode).toEqual(200);
         expect(body.msg).toEqual('Total $ 0');
+        expect(body).toEqual(expect.objectContaining({ msg: expect.any(String),
+                                                    msg1: expect.stringContaining('Total USD'),
+                                                    cartOfUser: expect.objectContaining({username: expect.any(String),
+                                                                                        carts: expect.any(Array)})
+                                                    }))
 
     });
 
@@ -68,12 +79,9 @@ describe("GET /api/v2/carts/id  <<Correctos>>", () => {
         const token = await generateJWT({role:'god'});
 
         const { body, statusCode } = await request(app).get('/api/v2/carts/2').auth(token,{type: 'bearer'});
-        
+
         expect(statusCode).toEqual(200);
         expect(body.msg).toEqual("Total $ 140000");
-
-        
-        //expect(body.msg).toEqual('Total $ 0');
 
     });
 
@@ -91,35 +99,26 @@ describe("GET /api/v2/carts/id  <<Correctos>>", () => {
 
 });
 
-describe("GET /api/v2/carts/id  <<Incorrecot>>", () => {
+describe("GET /api/v2/carts/id  <<Incorrecto>>", () => {
     test("404,role: GOD// cartOfId, No encuentra al usuario por lo que retorna ", async () => {
         const token = await generateJWT({role:'god'});
     
         const { body, statusCode } = await request(app).get('/api/v2/carts/75').auth(token,{type: 'bearer'});;
-        
-        //
+
         expect(statusCode).toEqual(404);
         expect(body.msg).toEqual('No encuentra el usuario');
         //expect(body).toMatchObject({ token: expect.any(String) });
     });
 
-
     test("401,role: guest// cartOfId, No tenes permiso de ver ese carro ", async () => {
         const token = await generateJWT({role:'guest', id_user: 3});
-
-    
         const { body, statusCode } = await request(app).get('/api/v2/carts/2').auth(token,{type: 'bearer'});;
-        
-        //
         expect(statusCode).toEqual(401);
         expect(body.Mensaje).toEqual('No tienes permisos para ver.');
         //expect(body).toMatchObject({ token: expect.any(String) });
     });
 
-
-
 });
-
 
 describe("PUT /api/v2/carts/id  <<Correctos>>", () => {
     
@@ -145,10 +144,8 @@ describe("PUT /api/v2/carts/id  <<Correctos>>", () => {
         }];
         
         const { body, statusCode } = await request(app).put(`/api/v2/carts/1`).auth(token,{type: 'bearer'}).send(data);
-        
 
         expect(statusCode).toEqual(200);
-        //expect(body.msg).toEqual('Total $ 140000.00');
 
     });
 
@@ -165,7 +162,7 @@ describe("PUT /api/v2/carts/id  <<Correctos>>", () => {
 
     });
 
-    test("200,role: GOD// Update a un carrito con un producto con stok LIMITADO ", async () => {
+    test("200,role: GOD// Update a un carrito con un producto con stock LIMITADO ", async () => {
         const token = await generateJWT({role:'god'});
         
         const data=[{
@@ -195,7 +192,7 @@ describe("PUT /api/v2/carts/id  <<Correctos>>", () => {
 
     });
 
-    test("200,role: GOD// Update a un carrito con un producto con SIN stok(0)", async () => {
+    test("200,role: GOD// Update a un carrito con un producto con SIN stock(0)", async () => {
         const token = await generateJWT({role:'god'});
         
         const data=[{
@@ -222,7 +219,6 @@ describe("PUT /api/v2/carts/id  <<Correctos>>", () => {
         ];
         
         const { body, statusCode } = await request(app).put(`/api/v2/carts/1`).auth(token,{type: 'bearer'}).send(data);
-        
         
         expect(statusCode).toEqual(200);
         expect(body.productos.length).toBeGreaterThan(1);
@@ -287,7 +283,7 @@ describe("PUT /api/v2/carts/id  <<Correctos>>", () => {
 
     });
 
-    test("200,role: guest// Update and Get of guest diaa wat,que decia /role: guest", async () => {/////cuidado
+    test("200,role: guest// Update and Get of guest /role: guest", async () => {/////cuidado
         const token = await generateJWT({role:'guest', id_user: 3});
         ///las dos juntas                      guest
         
@@ -388,25 +384,19 @@ describe("PUT /api/v2/carts/id  <<Incorrecto>>", () => {
     
         const { body, statusCode } = await request(app).put('/api/v2/carts/2').auth(token,{type: 'bearer'});;
         
-        //
         expect(statusCode).toEqual(401);
         expect(body.Mensaje).toEqual('No tienes permisos');
-        //expect(body).toMatchObject({ token: expect.any(String) });
     });
 
     
 
 });
 
-
-
 describe("Errores en endpoints", () => {
     
     test("400, GET bad request en el endpoint", async ()=>{
         const token = await generateJWT({role:'god'});
-        
         const {statusCode } = await request(app).get('/api/v2/carts/3/asdd/dsad/sa#$%').auth(token,{type: 'bearer'});
-        
         expect(statusCode).toEqual(400);
         ;
     });
@@ -416,9 +406,7 @@ describe("Errores en endpoints", () => {
         let data={};
         
         const {statusCode } = await request(app).put('/api/v2/carts/76/sda/sd*&&^^').auth(token,{type: 'bearer'}).send(data);
-        
         expect(statusCode).toEqual(400);
-        
     });
     
     test("400, POST bad request en el endpoint", async ()=>{
@@ -426,9 +414,7 @@ describe("Errores en endpoints", () => {
         let data={};
         
         const {statusCode } = await request(app).post('/api/v2/carts/300/asdd/qwe/uim/LMAO').auth(token,{type: 'bearer'}).send(data);
-        
         expect(statusCode).toEqual(400);
-        
     });
     
     test("400, DELETE bad request en el endpoint", async ()=>{
@@ -443,13 +429,9 @@ describe("Errores en endpoints", () => {
 }) 
 
 test("Limpio el servidor ", async()=>{
-    //await sequelize.Start();ni idea como volverla abrrir
     await sequelize.sync({ force: true });
-
     const pro = await db.Product.findOne({where: {id_product: 1}});
-
     expect(null).toEqual(pro);
-
 }); 
 
 
